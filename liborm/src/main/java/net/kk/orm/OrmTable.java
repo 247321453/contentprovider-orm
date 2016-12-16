@@ -22,6 +22,7 @@ import java.util.Map;
 import static net.kk.orm.SQLiteUtils.mask;
 
 class OrmTable<T> extends IOrm {
+    private final List<String> mColumNames = new ArrayList<>();
     private final List<OrmColumn> mColums = new ArrayList<>();
     private final List<OrmColumn> mkeyColums = new ArrayList<>();
     private Table mTable;
@@ -317,6 +318,12 @@ class OrmTable<T> extends IOrm {
 
     private void addField(Field field) {
         OrmColumn column = new OrmColumn(field);
+        if (mColumNames.contains(column.getColumnName())) {
+            //字段已经存在
+            Log.w(Orm.TAG, "column is readly exist."+column);
+            return;
+        }
+        mColumNames.add(column.getColumnName());
         if (column.isPrimaryKey()) {
             mkeyColums.add(column);
         } else {

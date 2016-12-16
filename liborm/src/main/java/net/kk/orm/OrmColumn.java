@@ -75,6 +75,15 @@ class OrmColumn extends IOrm {
         return mColumn.autoIncrement();
     }
 
+    @Override
+    public String toString() {
+        return "OrmColumn{" +
+                "name="+getColumnName()+
+                ", Field=" + mField +
+                ", pClass=" + pClass +
+                '}';
+    }
+
     public String getDefaultValue() {
         if (TextUtils.isEmpty(mDefaultText)) {
             mDefaultText = mColumn.defaultValue();
