@@ -1,0 +1,36 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.2.2'
+        classpath 'me.tatarka:gradle-retrolambda:3.2.5'
+    }
+}
+ext {
+    compileSdkVersion = 23
+    buildToolsVersion = "23.0.3"
+    dependencies = [
+            "appcompat-v7"   : "com.android.support:appcompat-v7:23.+",
+            "gson"           : "com.google.code.gson:gson:2.2.4",
+            "design"         : 'com.android.support:design:23.2.1',
+            'jdeferred'      : 'org.jdeferred:jdeferred-android-aar:1.2.4',
+            'recyclerview'   : 'com.android.support:recyclerview-v7:23.2.1',
+            'vector-drawable': 'com.android.support:support-vector-drawable:23.2.1',
+            'super-csv'      : 'net.sf.supercsv:super-csv:2.4.0',
+            'pinyin4j'       : 'com.belerweb:pinyin4j:2.5.1',
+            'glide'          : 'com.github.bumptech.glide:glide:3.7.0',
+            'photoview'      : 'com.github.chrisbanes.photoview:library:1.2.4',
+    ]
+}
+allprojects {
+    repositories {
+        jcenter()
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
