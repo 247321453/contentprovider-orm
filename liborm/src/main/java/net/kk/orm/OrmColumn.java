@@ -106,7 +106,7 @@ class OrmColumn extends IOrm {
         return mColumn.value().trim();
     }
 
-    public Object convertDbValue(Object val) {
+    public Object toDbValue(Object val) {
         if (val != null) {
             final SQLiteType type = getSQLiteType();
             try {
@@ -168,13 +168,13 @@ class OrmColumn extends IOrm {
         return val;
     }
 
-    public Object getDbValue(Object parent) {
+    public Object getDbValueByParent(Object parent) {
         Object val = null;
         try {
             val = mField.get(parent);
         } catch (IllegalAccessException e) {
         }
-        return convertDbValue(val);
+        return toDbValue(val);
     }
 
     public Object getValue(Object parent) {
@@ -188,7 +188,7 @@ class OrmColumn extends IOrm {
 
     public void write(Object parent, ContentValues contentValues) {
         final SQLiteType type = getSQLiteType();
-        final Object val = getDbValue(parent);
+        final Object val = getDbValueByParent(parent);
         final String name = getColumnName();
         try {
             switch (type) {

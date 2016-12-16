@@ -75,7 +75,7 @@ public class WhereBuilder<T> {
         mStringBuilder.append(wrapper(op));
         mStringBuilder.append("? ");
         mOPs++;
-        this.whereItems.add(value);
+        this.whereItems.add(column.toDbValue(value));
         return this;
     }
 

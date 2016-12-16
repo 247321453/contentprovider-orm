@@ -3,6 +3,7 @@ package net.kk.orm.demo.bean;
 import net.kk.orm.annotations.Column;
 import net.kk.orm.annotations.Table;
 import net.kk.orm.demo.db.Datas;
+import net.kk.orm.demo.sec.SecConvert;
 
 import java.util.Arrays;
 
@@ -10,7 +11,7 @@ import java.util.Arrays;
 public class SetBean {
     @Column(value = Datas.Set.ID, autoIncrement = true, primaryKey = true)
     private long id;
-    @Column(Datas.Set.NAME)
+    @Column(value = Datas.Set.NAME,convert = SecConvert.class)
     private String name;
     @Column(Datas.Set.USERS)
     private int[] users;

@@ -21,7 +21,7 @@ public class MainActivity extends Activity {
         new Thread(() -> {
             testInsert();
             testUpdate();
-            testDelete();
+//            testDelete();
         }).start();
     }
 
@@ -45,28 +45,34 @@ id自增 ok
     */
     private void testInsert() {
         int setCount = mOrm.select(SetBean.class).count();
-        Log.i("orm", "setCount="+setCount);
+        Log.i("orm", "setCount=" + setCount);
         if (setCount == 0) {
             Log.i("orm", "add set:" + addSet());
         } else {
-            SetBean setBean=mOrm.select(SetBean.class).orderBy(Datas.Set.ID, true).findFirst();
+            //倒序
+            SetBean setBean = mOrm.select(SetBean.class).orderBy(Datas.Set.ID, true).findFirst();
             Log.i("orm", "setBean:" + setBean);
         }
+        //根据加密字段查询
+        SetBean setBean2 = mOrm.select(SetBean.class)
+                .where(Datas.Set.NAME, "=", "hello")
+                .findFirst();
+        Log.i("orm", "setBean2:" + setBean2);
         Log.i("orm", "add stub1:" + addStub1());
         Log.i("orm", "add stub2:" + addStub2());
         Log.i("orm", "add stub3:" + addStub3());
     }
 
-    private void testUpdate(){
-        SetBean setBean=mOrm.select(SetBean.class).orderBy(Datas.Set.ID, true).findFirst();
+    private void testUpdate() {
+        SetBean setBean = mOrm.select(SetBean.class).orderBy(Datas.Set.ID, true).findFirst();
         setBean.setName("no2");
-        Log.i("orm", "update set :" +mOrm.update(setBean));
+        Log.i("orm", "update set :" + mOrm.update(setBean));
         StubBean stubBean = new StubBean();
         stubBean.setAddress("223");
-        Log.i("orm", "update stub :" +mOrm.update(stubBean, new WhereBuilder<>(StubBean.class)));
+        Log.i("orm", "update stub :" + mOrm.update(stubBean, new WhereBuilder<>(StubBean.class)));
     }
 
-    private void testDelete(){
+    private void testDelete() {
         StubBean stubBean = new StubBean();
         stubBean.setName("stub3");
         Log.i("orm", "delete stub :" + mOrm.delete(stubBean));
@@ -83,19 +89,22 @@ id自增 ok
         setBean.setStubBean(stubBean);
         return mOrm.insert(setBean);
     }
-    private long addStub1(){
+
+    private long addStub1() {
         StubBean stubBean = new StubBean();
         stubBean.setName("stub");
         stubBean.setAddress("hello");
         return mOrm.insert(stubBean);
     }
-    private long addStub2(){
+
+    private long addStub2() {
         StubBean stubBean = new StubBean();
         stubBean.setName("stub2");
         stubBean.setAddress("hello");
         return mOrm.insert(stubBean);
     }
-    private long addStub3(){
+
+    private long addStub3() {
         StubBean stubBean = new StubBean();
         stubBean.setName("stub3");
         stubBean.setAddress("hello");
