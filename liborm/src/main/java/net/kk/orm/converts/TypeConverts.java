@@ -1,8 +1,11 @@
 package net.kk.orm.converts;
 
 
+import android.text.TextUtils;
 import android.util.Log;
 
+import net.kk.orm.annotations.Column;
+import net.kk.orm.api.OrmTable;
 import net.kk.orm.linq.Orm;
 import net.kk.orm.api.OrmColumn;
 import net.kk.orm.api.SQLiteType;
@@ -13,7 +16,7 @@ import java.util.Map;
 
 public class TypeConverts {
     private static final Map<Class<?>, IConvert<?, ?>> CLASS_TYPE_CONVERT_MAP = new HashMap<>();
-    private static final Map<Class<?>, IConvert<?, ?>> CLASS_ID_CONVERT_MAP = new HashMap<>();
+    private static final Map<String, IConvert<?, ?>> CLASS_ID_CONVERT_MAP = new HashMap<>();
     private static TypeConverts sTypeConverts = new TypeConverts();
 
     private TypeConverts() {
@@ -44,7 +47,7 @@ public class TypeConverts {
         return CLASS_TYPE_CONVERT_MAP.containsKey(wrapper(pClass));
     }
 
-    public IConvert<?, ?> find(Class<?> type) {
+    public IConvert<?, ?> find(Class<?> type, Column column) {
         final Class<?> key = wrapper(type);
         IConvert<?, ?> typeConvert = CLASS_TYPE_CONVERT_MAP.get(key);
         if (typeConvert != null) {
@@ -57,19 +60,31 @@ public class TypeConverts {
                 typeConvert = new EnumConvert<>(type);
                 CLASS_TYPE_CONVERT_MAP.put(key, typeConvert);
             } else {
-                typeConvert = CLASS_ID_CONVERT_MAP.get(key);
-                if (typeConvert == null) {
-                    OrmColumn column = Orm.table(type).findKey();
-                    if (column != null) {
-                        if (Integer.class.equals(column.getType())) {
-                            typeConvert = new UniconKeyConvert<>(type, Integer.class, column);
-                            CLASS_ID_CONVERT_MAP.put(key, typeConvert);
-                        } else if (Long.class.equals(column.getType())) {
-                            typeConvert = new UniconKeyConvert<>(type, Long.class, column);
-                            CLASS_ID_CONVERT_MAP.put(key, typeConvert);
-                        } else if (String.class.equals(column.getType())) {
-                            typeConvert = new UniconKeyConvert<>(type, String.class, column);
-                            CLASS_ID_CONVERT_MAP.put(key, typeConvert);
+                String col = null;
+                OrmTable<?> tOrmTable = Orm.table(type);
+                OrmColumn ormColumn = null;
+                if (TextUtils.isEmpty(column.union())) {
+                    ormColumn = tOrmTable.findKey();
+                    if (ormColumn != null) {
+                        col = ormColumn.getColumnName();
+                    }
+                } else {
+                    col = column.value();
+                    ormColumn = tOrmTable.getColumn(col);
+                }
+                if (col != null && ormColumn != null) {
+                    String key2 = type.getName() + "@" + col;
+                    typeConvert = CLASS_ID_CONVERT_MAP.get(key2);
+                    if (typeConvert == null) {
+                        if (Integer.class.equals(ormColumn.getType())) {
+                            typeConvert = new UniconKeyConvert<>(type, Integer.class, ormColumn);
+                            CLASS_ID_CONVERT_MAP.put(key2, typeConvert);
+                        } else if (Long.class.equals(ormColumn.getType())) {
+                            typeConvert = new UniconKeyConvert<>(type, Long.class, ormColumn);
+                            CLASS_ID_CONVERT_MAP.put(key2, typeConvert);
+                        } else if (String.class.equals(ormColumn.getType())) {
+                            typeConvert = new UniconKeyConvert<>(type, String.class, ormColumn);
+                            CLASS_ID_CONVERT_MAP.put(key2, typeConvert);
                         }
                     }
                 }

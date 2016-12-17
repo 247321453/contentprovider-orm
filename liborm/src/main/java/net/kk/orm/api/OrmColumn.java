@@ -34,7 +34,7 @@ public class OrmColumn extends IOrmBase {
             mColumn = new DefaultColumn(field);
         }
         if (mColumn.convert().equals(IConvert.class)) {
-            mConvert = TypeConverts.get().find(pClass);
+            mConvert = TypeConverts.get().find(pClass, this);
         } else {
             try {
                 mConvert = mColumn.convert().newInstance();

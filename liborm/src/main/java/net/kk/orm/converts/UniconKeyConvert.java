@@ -24,7 +24,7 @@ class UniconKeyConvert<D, T> implements IConvert<D, T> {
     @Override
     public T toValue(Orm orm, D id) {
 //        Log.d("orm", "class=" + pClass + ",id=" + id);
-        T t = orm.select(pClass).findById(id);
+        T t = orm.select(pClass).where(column.getColumnName(),"=", id).findFirst();
 //        Log.d("orm", "to T " + t);
         return t;
     }

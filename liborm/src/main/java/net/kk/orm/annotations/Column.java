@@ -17,6 +17,7 @@ public @interface Column {
 
     boolean autoIncrement() default false;
 
+    String union() default "";
     /***
      * 默认值
      */
