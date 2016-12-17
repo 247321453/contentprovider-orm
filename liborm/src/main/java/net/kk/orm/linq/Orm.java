@@ -1,4 +1,4 @@
-package net.kk.orm;
+package net.kk.orm.linq;
 
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -7,6 +7,10 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
 
+import net.kk.orm.api.OrmColumn;
+import net.kk.orm.api.OrmTable;
+import net.kk.orm.api.IContentResolver;
+import net.kk.orm.api.SQLiteOpera;
 import net.kk.orm.converts.IConvert;
 import net.kk.orm.converts.TypeConverts;
 import net.kk.orm.converts.IOjectConvert;
@@ -160,7 +164,7 @@ public class Orm {
             return 0;
         }
         ContentValues contentValues = new ContentValues();
-        table.write(this, object, contentValues, true,
+        table.write(this, object, contentValues, SQLiteOpera.UPDATE,
                 (cols == null || cols.length == 0) ? null : Arrays.asList(cols));
         return update(table.getType(), contentValues, whereBuilder, cols);
     }
@@ -186,7 +190,7 @@ public class Orm {
             return 0;
         }
         ContentValues contentValues = new ContentValues();
-        table.write(this, object, contentValues, false, null);
+        table.write(this, object, contentValues, SQLiteOpera.INSERT, null);
         try {
             long id;
             if (table.getTableUri() != null) {

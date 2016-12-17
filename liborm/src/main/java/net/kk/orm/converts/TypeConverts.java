@@ -3,8 +3,9 @@ package net.kk.orm.converts;
 
 import android.util.Log;
 
-import net.kk.orm.Orm;
-import net.kk.orm.SQLiteType;
+import net.kk.orm.linq.Orm;
+import net.kk.orm.api.OrmColumn;
+import net.kk.orm.api.SQLiteType;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -12,6 +13,7 @@ import java.util.Map;
 
 public class TypeConverts {
     private static final Map<Class<?>, IConvert<?, ?>> CLASS_TYPE_CONVERT_MAP = new HashMap<>();
+    private static final Map<Class<?>, IConvert<?, ?>> CLASS_ID_CONVERT_MAP = new HashMap<>();
     private static TypeConverts sTypeConverts = new TypeConverts();
 
     private TypeConverts() {
@@ -55,9 +57,27 @@ public class TypeConverts {
                 typeConvert = new EnumConvert<>(type);
                 CLASS_TYPE_CONVERT_MAP.put(key, typeConvert);
             } else {
-                typeConvert = new JsonTextConvert<>(type, Orm.getJsonConvert());
-                CLASS_TYPE_CONVERT_MAP.put(key, typeConvert);
+                typeConvert = CLASS_ID_CONVERT_MAP.get(key);
+                if (typeConvert == null) {
+                    OrmColumn column = Orm.table(type).findKey();
+                    if (column != null) {
+                        if (Integer.class.equals(column.getType())) {
+                            typeConvert = new UniconKeyConvert<>(type, Integer.class, column);
+                            CLASS_ID_CONVERT_MAP.put(key, typeConvert);
+                        } else if (Long.class.equals(column.getType())) {
+                            typeConvert = new UniconKeyConvert<>(type, Long.class, column);
+                            CLASS_ID_CONVERT_MAP.put(key, typeConvert);
+                        } else if (String.class.equals(column.getType())) {
+                            typeConvert = new UniconKeyConvert<>(type, String.class, column);
+                            CLASS_ID_CONVERT_MAP.put(key, typeConvert);
+                        }
+                    }
+                }
             }
+        }
+        if (typeConvert == null) {
+            typeConvert = new JsonTextConvert<>(type, Orm.getJsonConvert());
+            CLASS_TYPE_CONVERT_MAP.put(key, typeConvert);
         }
         return typeConvert;
     }

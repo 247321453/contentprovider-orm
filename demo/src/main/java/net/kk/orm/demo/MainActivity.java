@@ -4,14 +4,15 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 
-import net.kk.orm.Orm;
-import net.kk.orm.WhereBuilder;
+import net.kk.orm.demo.game.CardText;
+import net.kk.orm.linq.Orm;
 import net.kk.orm.demo.bean.SetBean;
 import net.kk.orm.demo.bean.StubBean;
 import net.kk.orm.demo.db.Datas;
 import net.kk.orm.demo.game.Card;
 import net.kk.orm.demo.game.CardData;
 import net.kk.orm.demo.game.CardFull;
+import net.kk.orm.demo.game.CardInfo;
 
 public class MainActivity extends Activity {
     Orm mOrm;
@@ -21,13 +22,31 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mOrm = new Orm(this);
-        Log.i("orm", "init ok");
-        Log.i("orm", "cards="+mOrm.select(CardData.class).count());
-        Card card =mOrm.select(Card.class).findById(27551);
-        Log.i("orm", "card="+card);
-        CardFull card2 =mOrm.select(CardFull.class).findById(41546);
-        Log.i("orm", "card2="+card2);
+        Log.i("orm", "cards=" + mOrm.select(CardData.class).count());
+        Card card = mOrm.select(Card.class).findById(27551);
+        Log.i("orm", "card=" + card);
+        CardFull card2 = mOrm.select(CardFull.class).findById(41546);
+        Log.i("orm", "card2=" + card2);
+        if (mOrm.select(CardInfo.class).count() == 0) {
+            CardInfo cardInfo = new CardInfo(123);
+            cardInfo.getData().setOt(2);
+            cardInfo.getData().setAlias(1234);
+            cardInfo.getText().setName("aaa");
+            mOrm.insert(cardInfo);
+            CardInfo cardInfo2 = new CardInfo(1234);
+            cardInfo2.getData().setOt(2);
+            cardInfo2.getData().setAlias(1234);
+            cardInfo2.getText().setName("bbb");
+            mOrm.insert(cardInfo);
+        }
+        CardData cardData = mOrm.select(CardData.class).findById(123);
+        Log.i("orm", "cardData=" + cardData);
+        CardText cardText = mOrm.select(CardText.class).findById(27551);
+        Log.i("orm", "cardText=" + cardText);
+        CardInfo cardInfo = mOrm.select(CardInfo.class).findFirst();
+        Log.i("orm", "cardInfo=" + cardInfo);
     }
+
     /*
 创建表，追加字段 ok
 数据转换，转义符号，特殊字段名 ok

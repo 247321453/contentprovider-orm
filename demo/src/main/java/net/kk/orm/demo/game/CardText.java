@@ -43,7 +43,9 @@ public class CardText {
     private String str15;
     @Column(OrmCard.Text.STR16)
     private String str16;
+    public CardText(){
 
+    }
     public CardText(Card card) {
         this.name = card.getName();
         this.desc = card.getDesc();
@@ -199,5 +201,14 @@ public class CardText {
 
     public void setStr16(String str16) {
         this.str16 = str16;
+    }
+
+    @Override
+    public String toString() {
+        return "CardText{" +
+                "name='" + name + '\'' +
+                ", code=" + code +
+                ", desc='" + desc + '\'' +
+                '}';
     }
 }

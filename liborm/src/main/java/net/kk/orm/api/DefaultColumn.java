@@ -1,7 +1,6 @@
-package net.kk.orm;
+package net.kk.orm.api;
 
 
-import net.kk.orm.SQLiteType;
 import net.kk.orm.annotations.Column;
 import net.kk.orm.converts.IConvert;
 

@@ -1,14 +1,15 @@
-package net.kk.orm;
+package net.kk.orm.linq;
 
 import android.database.Cursor;
 import android.text.TextUtils;
 import android.util.Log;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import net.kk.orm.api.OrmColumn;
+import net.kk.orm.api.OrmTable;
+import net.kk.orm.api.IContentResolver;
 
-import static net.kk.orm.SQLiteUtils.mask;
+import java.util.ArrayList;
+import java.util.List;
 
 public class OrmSelector<T> {
     private OrmTable<T> mTable;
@@ -60,7 +61,11 @@ public class OrmSelector<T> {
         if (col == null) {
             return null;
         }
-        return where(col.getColumnName(), "=", id).findFirst();
+        if (this.whereBuilder == null) {
+            this.whereBuilder = new WhereBuilder<>(orm, mTable);
+        }
+        this.whereBuilder.op(col, "=", id, true);
+        return findFirst();
     }
 
     public OrmSelector<T> and(String columnName, String op, Object value) {

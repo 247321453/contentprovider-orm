@@ -1,6 +1,7 @@
 package net.kk.orm.converts;
 
-import net.kk.orm.Orm;
+import net.kk.orm.api.SQLiteOpera;
+import net.kk.orm.linq.Orm;
 
 public class JsonTextConvert<T> extends CustomConvert<T> {
     private Class<T> mTClass;
@@ -21,7 +22,7 @@ public class JsonTextConvert<T> extends CustomConvert<T> {
     }
 
     @Override
-    public String toDbValue(Orm orm, T value) {
+    public String toDbValue(Orm orm, T value, SQLiteOpera opera) {
         return convert.toJson(value);
     }
 }

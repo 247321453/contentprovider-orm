@@ -1,7 +1,8 @@
 package net.kk.orm.converts;
 
-import net.kk.orm.Orm;
-import net.kk.orm.SQLiteType;
+import net.kk.orm.api.SQLiteOpera;
+import net.kk.orm.linq.Orm;
+import net.kk.orm.api.SQLiteType;
 
 /**
  * int[] List/Integer
@@ -13,6 +14,6 @@ public interface IConvert<D, V> {
 
     V toValue(Orm orm, D d);
 
-    D toDbValue(Orm orm,V value);
+    D toDbValue(Orm orm,V value,SQLiteOpera opera);
 }
 

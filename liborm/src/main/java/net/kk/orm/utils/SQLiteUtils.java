@@ -1,12 +1,14 @@
-package net.kk.orm;
+package net.kk.orm.utils;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import net.kk.orm.linq.Orm;
+
 import java.util.Locale;
 
-class SQLiteUtils {
+public class SQLiteUtils {
     public static boolean tabbleIsExist(SQLiteDatabase db, String tableName) {
         boolean result = false;
         if (tableName == null) {

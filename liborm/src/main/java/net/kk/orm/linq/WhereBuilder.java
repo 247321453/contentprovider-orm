@@ -1,9 +1,13 @@
-package net.kk.orm;
+package net.kk.orm.linq;
+
+import net.kk.orm.api.OrmColumn;
+import net.kk.orm.api.OrmTable;
+import net.kk.orm.api.SQLiteOpera;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static net.kk.orm.SQLiteUtils.mask;
+import static net.kk.orm.utils.SQLiteUtils.mask;
 
 public class WhereBuilder<T> {
     private OrmTable<T> mTable;
@@ -64,7 +68,7 @@ public class WhereBuilder<T> {
         return op(whereBuilder, false);
     }
 
-    private WhereBuilder<T> op(OrmColumn column, String op, Object value, boolean isAnd) {
+    WhereBuilder<T> op(OrmColumn column, String op, Object value, boolean isAnd) {
         if (mOPs > 0) {
             if (isAnd) {
                 mStringBuilder.append(" AND ");
@@ -77,7 +81,7 @@ public class WhereBuilder<T> {
         mStringBuilder.append(wrapper(op));
         mStringBuilder.append("? ");
         mOPs++;
-        this.whereItems.add(column.toDbValue(mOrm, value));
+        this.whereItems.add(column.toDbValue(mOrm, value, SQLiteOpera.QUERY));
         return this;
     }
 

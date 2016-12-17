@@ -1,10 +1,12 @@
-package net.kk.orm;
+package net.kk.orm.api;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 import android.util.Log;
+
+import net.kk.orm.linq.Orm;
 
 import java.util.HashMap;
 import java.util.List;

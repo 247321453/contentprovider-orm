@@ -1,4 +1,4 @@
-package net.kk.orm;
+package net.kk.orm.api;
 
 import android.content.ContentProvider;
 import android.content.ContentUris;
@@ -10,9 +10,11 @@ import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
 
+import net.kk.orm.linq.Orm;
+
 import java.util.Arrays;
 
-import static net.kk.orm.SQLiteUtils.mask;
+import static net.kk.orm.utils.SQLiteUtils.mask;
 
 public abstract class OrmContentProvider extends ContentProvider {
 
@@ -89,6 +91,9 @@ public abstract class OrmContentProvider extends ContentProvider {
             }
         } else {
             try {
+//                if(Orm.DEBUG)
+                Log.d(Orm.TAG, "select "+ Arrays.toString(columns) +" from "+table
+                +" where "+selection+" "+Arrays.toString(selectionArgs)+" order by "+sortOrder);
                 return db.query(table, columns, selection, selectionArgs, null, null, sortOrder);
             } catch (Exception e) {
                 Log.e(Orm.TAG, "query " + uri, e);

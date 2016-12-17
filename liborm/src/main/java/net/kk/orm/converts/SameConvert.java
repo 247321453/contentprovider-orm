@@ -1,7 +1,8 @@
 package net.kk.orm.converts;
 
-import net.kk.orm.Orm;
-import net.kk.orm.SQLiteType;
+import net.kk.orm.api.SQLiteOpera;
+import net.kk.orm.linq.Orm;
+import net.kk.orm.api.SQLiteType;
 
 class SameConvert<T> implements IConvert<T, T> {
     @Override
@@ -23,7 +24,7 @@ class SameConvert<T> implements IConvert<T, T> {
     }
 
     @Override
-    public T toDbValue(Orm orm, T value) {
+    public T toDbValue(Orm orm, T value, SQLiteOpera opera) {
         return value;
     }
 }

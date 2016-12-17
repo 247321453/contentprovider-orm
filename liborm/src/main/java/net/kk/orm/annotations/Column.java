@@ -1,7 +1,6 @@
 package net.kk.orm.annotations;
 
 
-import net.kk.orm.SQLiteType;
 import net.kk.orm.converts.IConvert;
 
 import java.lang.annotation.ElementType;

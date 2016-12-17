@@ -3,16 +3,10 @@ package net.kk.orm.demo.game;
 import android.content.Context;
 import android.util.Log;
 
-import net.kk.orm.Orm;
-import net.kk.orm.OrmContentProvider;
-import net.kk.orm.OrmSQLiteOpenHelper;
-import net.kk.orm.SimpleOrmSQLiteHelper;
-import net.kk.orm.demo.bean.SetBean;
-import net.kk.orm.demo.bean.StubBean;
-import net.kk.orm.demo.game.Card;
-import net.kk.orm.demo.game.CardData;
-import net.kk.orm.demo.game.CardText;
-import net.kk.orm.demo.game.OrmCard;
+import net.kk.orm.linq.Orm;
+import net.kk.orm.api.OrmContentProvider;
+import net.kk.orm.api.OrmSQLiteOpenHelper;
+import net.kk.orm.api.SimpleOrmSQLiteHelper;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -54,7 +48,7 @@ public class CardContentProvider extends OrmContentProvider {
     protected OrmSQLiteOpenHelper getSQLiteOpenHelper(Context context) {
         if (mMyOrmSQLiteHelper == null) {
             mMyOrmSQLiteHelper = new SimpleOrmSQLiteHelper(context, OrmCard.DBNAME, OrmCard.VERSION,
-                    Arrays.asList(CardData.class, CardText.class, Card.class,CardFull.class));
+                    Arrays.asList(CardData.class, CardText.class, Card.class, CardFull.class, CardInfo.class));
         }
         return mMyOrmSQLiteHelper;
     }

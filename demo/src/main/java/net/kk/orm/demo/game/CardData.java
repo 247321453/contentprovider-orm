@@ -28,7 +28,7 @@ public class CardData {
     @Column(OrmCard.Data.CATEGORY)
     protected long category;
 
-    protected CardData() {
+    public CardData() {
     }
 
     public CardData(long code) {

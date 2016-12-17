@@ -1,4 +1,4 @@
-package net.kk.orm;
+package net.kk.orm.linq;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -8,6 +8,8 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.CancellationSignal;
+
+import net.kk.orm.api.IContentResolver;
 
 class DefaultContentResolver implements IContentResolver {
     private ContentResolver contentResolver;

@@ -53,4 +53,12 @@ public interface OrmCard {
                 + Text.TABLE + "." + Text.ID;
         String CONTENT_URI_STRING = "content://" + AUTHORITY + "/cards/";
     }
+
+    interface Info {
+        String ID = "id";
+        String TABLE = "info";
+        String DATA = "data";
+        String TEXT = "text";
+        String CONTENT_URI_STRING = "content://" + AUTHORITY + "/" + TABLE + "/";
+    }
 }

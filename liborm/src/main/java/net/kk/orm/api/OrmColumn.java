@@ -1,19 +1,22 @@
-package net.kk.orm;
+package net.kk.orm.api;
 
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.text.TextUtils;
 import android.util.Log;
 
-
 import net.kk.orm.annotations.Column;
 import net.kk.orm.converts.IConvert;
-import net.kk.orm.converts.JsonTextConvert;
 import net.kk.orm.converts.TypeConverts;
+import net.kk.orm.linq.Orm;
+import net.kk.orm.utils.SQLiteUtils;
 
 import java.lang.reflect.Field;
 
-class OrmColumn extends IOrm {
+/**
+ * @hide
+ */
+public class OrmColumn extends IOrmBase {
     private Column mColumn;
     private Field mField;
     private final Class<?> pClass;
@@ -41,12 +44,6 @@ class OrmColumn extends IOrm {
                 }
             }
         }
-        if (mConvert == null) {
-            if (Orm.DEBUG) {
-                Log.w(Orm.TAG, "no find convert " + mRClass);
-            }
-            mConvert = new JsonTextConvert<>(pClass, Orm.getJsonConvert());
-        }
     }
 
     public Column getColumn() {
@@ -54,7 +51,7 @@ class OrmColumn extends IOrm {
     }
 
     public Class<?> getType() {
-        return pClass;
+        return mRClass;
     }
 
     public boolean isNumberField() {
@@ -118,12 +115,11 @@ class OrmColumn extends IOrm {
         return mColumn.value();
     }
 
-    public Object toDbValue(Orm orm, Object val) {
+    public Object toDbValue(Orm orm, Object val, SQLiteOpera opera) {
         if (val != null) {
-            final SQLiteType type = getSQLiteType();
             try {
                 IConvert iConvert = mConvert;
-                val = iConvert.toDbValue(orm, val);
+                val = iConvert.toDbValue(orm, val, opera);
             } catch (Exception e) {
                 if (Orm.DEBUG) {
                     Log.w(Orm.TAG, "convert:" + val, e);
@@ -136,13 +132,13 @@ class OrmColumn extends IOrm {
         return val;
     }
 
-    public Object getDbValueByParent(Orm orm, Object parent) {
+    public Object getDbValueByParent(Orm orm, Object parent, SQLiteOpera opera) {
         Object val = null;
         try {
             val = mField.get(parent);
         } catch (IllegalAccessException e) {
         }
-        return toDbValue(orm, val);
+        return toDbValue(orm, val, opera);
     }
 
     public Object getValue(Object parent) {
@@ -154,9 +150,9 @@ class OrmColumn extends IOrm {
         return val;
     }
 
-    public void write(Orm orm, Object parent, ContentValues contentValues) {
+    public void write(Orm orm, Object parent, ContentValues contentValues, SQLiteOpera opera) {
         final SQLiteType type = getSQLiteType();
-        final Object val = getDbValueByParent(orm, parent);
+        final Object val = getDbValueByParent(orm, parent, opera);
         final String name = getColumnNameOrg();
         try {
             switch (type) {
@@ -184,7 +180,7 @@ class OrmColumn extends IOrm {
         }
     }
 
-    public Object read(Orm orm,Cursor cursor) {
+    public Object read(Orm orm, Cursor cursor) {
         int index = cursor.getColumnIndex(getColumnNameOrg());
         if (index < 0) {
             if (Orm.DEBUG) {

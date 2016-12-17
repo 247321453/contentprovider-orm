@@ -1,6 +1,8 @@
-package net.kk.orm;
+package net.kk.orm.api;
 
 import android.content.Context;
+
+import net.kk.orm.linq.Orm;
 
 import java.util.List;
 

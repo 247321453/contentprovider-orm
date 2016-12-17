@@ -1,4 +1,4 @@
-package net.kk.orm;
+package net.kk.orm.api;
 
 import android.annotation.TargetApi;
 import android.content.ContentResolver;

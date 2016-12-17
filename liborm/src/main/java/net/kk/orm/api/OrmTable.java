@@ -1,4 +1,4 @@
-package net.kk.orm;
+package net.kk.orm.api;
 
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -7,8 +7,9 @@ import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
 
-
 import net.kk.orm.annotations.Table;
+import net.kk.orm.linq.Orm;
+import net.kk.orm.utils.SQLiteUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -16,9 +17,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static net.kk.orm.SQLiteUtils.mask;
+import static net.kk.orm.utils.SQLiteUtils.mask;
 
-class OrmTable<T> extends IOrm {
+public class OrmTable<T> extends IOrmBase {
     private final List<String> mFieldNames = new ArrayList<>();
     private final List<String> mColumNames = new ArrayList<>();
     private final List<OrmColumn> mColums = new ArrayList<>();
@@ -27,7 +28,7 @@ class OrmTable<T> extends IOrm {
     private Uri mUri;
     private Class<T> mTClass;
 
-    OrmTable(Class<T> pClass) {
+    public OrmTable(Class<T> pClass) {
         mTClass = pClass;
         mTable = pClass.getAnnotation(Table.class);
         if (mTable == null) {
@@ -41,12 +42,14 @@ class OrmTable<T> extends IOrm {
 
     public OrmColumn getColumn(String name) {
         for (OrmColumn column : mkeyColums) {
-            if (TextUtils.equals(column.getColumnNameOrg(), name)) {
+            if (TextUtils.equals(column.getColumnNameOrg(), name)
+                    || TextUtils.equals(column.getColumnName(), name)) {
                 return column;
             }
         }
         for (OrmColumn column : mColums) {
-            if (TextUtils.equals(column.getColumnNameOrg(), name)) {
+            if (TextUtils.equals(column.getColumnNameOrg(), name)
+                    || TextUtils.equals(column.getColumnName(), name)) {
                 return column;
             }
         }
@@ -97,7 +100,7 @@ class OrmTable<T> extends IOrm {
                 '}';
     }
 
-    public String write(Orm orm, Object t, ContentValues contentValues, boolean isupdate, List<String> cols) {
+    public String write(Orm orm, Object t, ContentValues contentValues, SQLiteOpera opera, List<String> cols) {
         if (t == null) return null;
         StringBuilder stringBuilder = new StringBuilder();
         int count = 0;
@@ -106,7 +109,7 @@ class OrmTable<T> extends IOrm {
             if (column.isAutoIncrement()) {
                 continue;
             }
-            if (isupdate) {
+            if (opera == SQLiteOpera.UPDATE) {
                 if (column.isPrimaryKey()) {
                     continue;
                 }
@@ -117,7 +120,7 @@ class OrmTable<T> extends IOrm {
                     continue;
                 }
             }
-            column.write(orm, t, contentValues);
+            column.write(orm, t, contentValues, opera);
             if (count > 0) {
                 stringBuilder.append(",");
             }
@@ -135,7 +138,7 @@ class OrmTable<T> extends IOrm {
                     continue;
                 }
             }
-            column.write(orm, t, contentValues);
+            column.write(orm, t, contentValues, opera);
             if (count > 0) {
                 stringBuilder.append(",");
             }

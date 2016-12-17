@@ -1,8 +1,9 @@
 package net.kk.orm.converts;
 
 
-import net.kk.orm.Orm;
-import net.kk.orm.SQLiteType;
+import net.kk.orm.api.SQLiteOpera;
+import net.kk.orm.linq.Orm;
+import net.kk.orm.api.SQLiteType;
 
 public abstract class CustomConvert<T> implements IConvert<String, T> {
     public final static SQLiteType TYPE = SQLiteType.TEXT;
@@ -10,14 +11,4 @@ public abstract class CustomConvert<T> implements IConvert<String, T> {
     public SQLiteType getSQLiteType() {
         return TYPE;
     }
-
-    public CustomConvert() {
-    }
-
-    @Override
-    public abstract T toValue(Orm orm, String val);
-
-    @Override
-    public abstract String toDbValue(Orm orm,T value);
-
 }
