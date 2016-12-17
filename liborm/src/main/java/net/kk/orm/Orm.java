@@ -87,7 +87,7 @@ public class Orm {
 
     public <T> int delete(Class<T> pClass, WhereBuilder<T> whereBuilder) {
         OrmTable<T> table = table(pClass);
-        if (table == null) {
+        if (table == null||table.isOnlyRead()) {
             return 0;
         }
         String where = whereBuilder.getWhereString();
@@ -107,7 +107,7 @@ public class Orm {
     public <T> int delete(T object) {
         if (object == null) return 0;
         OrmTable<T> table = (OrmTable<T>) table(object.getClass());
-        if (table == null) {
+        if (table == null||table.isOnlyRead()) {
             return 0;
         }
         WhereBuilder<T> whereBuilder = new WhereBuilder<>(this, table).only(object);
@@ -124,7 +124,7 @@ public class Orm {
 
     public <T> int update(Class<T> pClass, ContentValues contentValues, WhereBuilder<T> whereBuilder, String... cols) {
         OrmTable<T> table = table(pClass);
-        if (table == null) {
+        if (table == null||table.isOnlyRead()) {
             return 0;
         }
         String where;
@@ -156,7 +156,7 @@ public class Orm {
     public <T> int update(T object, WhereBuilder<T> whereBuilder, String... cols) {
         if (object == null) return -1;
         OrmTable<T> table = (OrmTable<T>) table(object.getClass());
-        if (table == null) {
+        if (table == null||table.isOnlyRead()) {
             return 0;
         }
         ContentValues contentValues = new ContentValues();
@@ -172,7 +172,7 @@ public class Orm {
     public <T> int update(T object, String... cols) {
         if (object == null) return 0;
         OrmTable<T> table = (OrmTable<T>) table(object.getClass());
-        if (table == null) {
+        if (table == null||table.isOnlyRead()) {
             return 0;
         }
         WhereBuilder<T> whereBuilder = new WhereBuilder<>(this, table).only(object);
@@ -182,7 +182,7 @@ public class Orm {
     public <T> long insert(T object) {
         if (object == null) return 0;
         OrmTable<?> table = table(object.getClass());
-        if (table == null) {
+        if (table == null||table.isOnlyRead()) {
             return 0;
         }
         ContentValues contentValues = new ContentValues();

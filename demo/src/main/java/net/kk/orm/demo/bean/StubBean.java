@@ -4,7 +4,7 @@ import net.kk.orm.annotations.Column;
 import net.kk.orm.annotations.Table;
 import net.kk.orm.demo.db.Datas;
 
-@Table(value = Datas.Stub.TABLE, uri = Datas.Stub.CONTENT_URI_STRING)
+@Table(name = Datas.Stub.TABLE, uri = Datas.Stub.CONTENT_URI_STRING)
 public class StubBean {
     @Column(value = Datas.Stub.NAME, primaryKey = true)
     private String name;

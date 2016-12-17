@@ -10,6 +10,8 @@ import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
 
+import java.util.Arrays;
+
 import static net.kk.orm.SQLiteUtils.mask;
 
 public abstract class OrmContentProvider extends ContentProvider {
@@ -42,27 +44,37 @@ public abstract class OrmContentProvider extends ContentProvider {
 
     @Override
     public String getType(Uri uri) {
-        String table = getTable(uri);
+        OrmTable<?> table = getTable(uri);
         if (table != null) {
-            return makeType(table, isIdUri(uri));
+            return makeType(table.getTableType(), isIdUri(uri));
         }
         return makeType("unknown", false);
     }
 
     @SuppressWarnings("unchecked")
-    public String getTable(Uri uri) {
+    public OrmTable<?> getTable(Uri uri) {
         OrmTable<?> table = mOrmSQLiteOpenHelper.getTable(uri);
         if (table == null) {
             return null;
         }
-        return table.getTableName();
+        return table;
     }
 
+    public String getTableName(Uri uri) {
+        OrmTable<?> table = mOrmSQLiteOpenHelper.getTable(uri);
+        if (table == null) {
+            return null;
+        }
+        if (!table.isOnlyRead()) {
+            return mask(table.getTableName());
+        }
+        return table.getTableName();
+    }
 
     @Override
     public Cursor query(Uri uri, String[] columns, String selection, String[] selectionArgs, String sortOrder) {
         if (uri == null) return null;
-        final String table = mask(getTable(uri));
+        final String table = getTableName(uri);
         if (TextUtils.isEmpty(table)) return null;
         SQLiteDatabase db = mOrmSQLiteOpenHelper.getReadableDatabase();
         if (isIdUri(uri)) {
@@ -88,7 +100,7 @@ public abstract class OrmContentProvider extends ContentProvider {
     @Override
     public Uri insert(Uri uri, ContentValues values) {
         if (uri == null) return null;
-        final String table = mask(getTable(uri));
+        final String table = getTableName(uri);
         if (TextUtils.isEmpty(table)) return uri;
         SQLiteDatabase db = mOrmSQLiteOpenHelper.getWritableDatabase();
         if (isIdUri(uri)) {
@@ -106,7 +118,7 @@ public abstract class OrmContentProvider extends ContentProvider {
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
         if (uri == null) return 0;
-        final String table = mask(getTable(uri));
+        final String table = getTableName(uri);
         if (TextUtils.isEmpty(table)) return 0;
         SQLiteDatabase db = mOrmSQLiteOpenHelper.getWritableDatabase();
         if (isIdUri(uri)) {
@@ -123,7 +135,7 @@ public abstract class OrmContentProvider extends ContentProvider {
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         if (uri == null) return 0;
-        final String table = mask(getTable(uri));
+        final String table = getTableName(uri);
         if (TextUtils.isEmpty(table)) return 0;
         SQLiteDatabase db = mOrmSQLiteOpenHelper.getWritableDatabase();
         if (isIdUri(uri)) {

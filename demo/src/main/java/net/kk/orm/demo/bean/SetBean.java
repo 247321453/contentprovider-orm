@@ -7,7 +7,7 @@ import net.kk.orm.demo.sec.SecConvert;
 
 import java.util.Arrays;
 
-@Table(value = Datas.Set.TABLE, uri = Datas.Set.CONTENT_URI_STRING)
+@Table(name = Datas.Set.TABLE, uri = Datas.Set.CONTENT_URI_STRING)
 public class SetBean {
     @Column(value = Datas.Set.ID, autoIncrement = true, primaryKey = true)
     private long id;

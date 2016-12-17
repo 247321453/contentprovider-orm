@@ -13,6 +13,7 @@ import java.util.Map;
 public abstract class OrmSQLiteOpenHelper extends SQLiteOpenHelper {
     protected Context context;
     private Map<String, OrmTable> mTableMap = new HashMap<>();
+
     //
     protected abstract List<Class<?>> getTables();
 
@@ -44,7 +45,7 @@ public abstract class OrmSQLiteOpenHelper extends SQLiteOpenHelper {
     public OrmTable<?> getTable(Uri uri) {
         OrmTable<?> table = mTableMap.get(uri.toString());
         if (table == null) {
-            if(Orm.DEBUG) {
+            if (Orm.DEBUG) {
                 Log.w(Orm.TAG, "get table=" + uri + " tabels=" + mTableMap);
             }
 //        } else {
@@ -73,13 +74,15 @@ public abstract class OrmSQLiteOpenHelper extends SQLiteOpenHelper {
             for (Class<?> c : classes) {
                 OrmTable<?> tOrmTable = Orm.table(c);
                 mTableMap.put(tOrmTable.getTableUri().toString(), tOrmTable);
-                OrmColumn column = tOrmTable.findNumberKey();
-                if (column != null) {
-                    mTableMap.put(tOrmTable.getTableUri()
-                                    .buildUpon()
-                                    .appendEncodedPath(LAST_ID)
-                                    .build().toString()
-                            , tOrmTable);
+                if (!tOrmTable.isOnlyRead()) {
+                    OrmColumn column = tOrmTable.findNumberKey();
+                    if (column != null) {
+                        mTableMap.put(tOrmTable.getTableUri()
+                                        .buildUpon()
+                                        .appendEncodedPath(LAST_ID)
+                                        .build().toString()
+                                , tOrmTable);
+                    }
                 }
             }
         }
@@ -94,7 +97,9 @@ public abstract class OrmSQLiteOpenHelper extends SQLiteOpenHelper {
             }
             for (Class<?> c : classes) {
                 OrmTable<?> tOrmTable = Orm.table(c);
-                tOrmTable.onCreate(db);
+                if (!tOrmTable.isOnlyRead()) {
+                    tOrmTable.onCreate(db);
+                }
             }
         }
     }
@@ -107,7 +112,10 @@ public abstract class OrmSQLiteOpenHelper extends SQLiteOpenHelper {
                 Log.d(Orm.TAG, "update table count " + classes.size());
             }
             for (Class<?> c : classes) {
-                Orm.table(c).onUpgrade(db, oldVersion, newVersion);
+                OrmTable<?> tOrmTable = Orm.table(c);
+                if (!tOrmTable.isOnlyRead()) {
+                    tOrmTable.onUpgrade(db, oldVersion, newVersion);
+                }
             }
         }
     }

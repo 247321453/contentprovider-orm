@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static net.kk.orm.SQLiteUtils.mask;

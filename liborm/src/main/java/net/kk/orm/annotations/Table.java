@@ -8,7 +8,13 @@ import java.lang.annotation.Target;
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Table {
-    String value();
+    String name();
+
+    boolean onlyRead() default false;
+
+    String typeName() default "";
+
     String createSql() default "";
-    String uri() default "";
+
+    String uri();
 }

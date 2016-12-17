@@ -8,20 +8,18 @@ import android.text.TextUtils;
 import android.util.Log;
 
 
-import net.kk.orm.annotations.Column;
 import net.kk.orm.annotations.Table;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static net.kk.orm.SQLiteUtils.mask;
 
 class OrmTable<T> extends IOrm {
+    private final List<String> mFieldNames = new ArrayList<>();
     private final List<String> mColumNames = new ArrayList<>();
     private final List<OrmColumn> mColums = new ArrayList<>();
     private final List<OrmColumn> mkeyColums = new ArrayList<>();
@@ -147,8 +145,19 @@ class OrmTable<T> extends IOrm {
         return stringBuilder.toString();
     }
 
+    public String getTableType() {
+        if (TextUtils.isEmpty(mTable.typeName())) {
+            return getTableName();
+        }
+        return mTable.typeName();
+    }
+
     public String getTableName() {
-        return mTable.value();
+        return mTable.name();
+    }
+
+    public boolean isOnlyRead() {
+        return mTable.onlyRead() || getTableName().contains("join");
     }
 
     public void onCreate(SQLiteDatabase db) {
@@ -317,6 +326,12 @@ class OrmTable<T> extends IOrm {
     }
 
     private void addField(Field field) {
+        if (mFieldNames.contains(field.getName())) {
+            if (Orm.DEBUG)
+                Log.w(Orm.TAG, "field is readly exist. " + field.getName());
+            return;
+        }
+        mFieldNames.add(field.getName());
         OrmColumn column = new OrmColumn(field);
         if (mColumNames.contains(column.getColumnName())) {
             //字段已经存在

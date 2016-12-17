@@ -12,7 +12,7 @@ final class DefaultTable implements Table {
     }
 
     @Override
-    public String value() {
+    public String name() {
         return cls.getSimpleName();
     }
 
@@ -24,6 +24,16 @@ final class DefaultTable implements Table {
     @Override
     public Class<? extends Annotation> annotationType() {
         return Table.class;
+    }
+
+    @Override
+    public boolean onlyRead() {
+        return false;
+    }
+
+    @Override
+    public String typeName() {
+        return null;
     }
 
     @Override

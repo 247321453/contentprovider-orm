@@ -2,6 +2,9 @@ package net.kk.orm;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
+
+import java.util.Locale;
 
 class SQLiteUtils {
     public static boolean tabbleIsExist(SQLiteDatabase db, String tableName) {
@@ -11,7 +14,7 @@ class SQLiteUtils {
         }
         Cursor cursor = null;
         try {
-            String sql = "select count(*) as c table  sqlite_master where type ='table' and name ='" + mask(tableName.trim()) + "' ";
+            String sql = "select count(*) as c from sqlite_master where type ='table' and name ='" + tableName.trim() + "' ";
             cursor = db.rawQuery(sql, null);
             if (cursor.moveToFirst()) {
                 int count = cursor.getInt(0);
@@ -20,18 +23,28 @@ class SQLiteUtils {
                 }
             }
         } catch (Exception e) {
+            Log.w(Orm.TAG, "check table " + tableName, e);
         }
         return result;
     }
+
     public static String mask(String name) {
+        String chkname = name.toLowerCase(Locale.US);
         if (name.startsWith("\"") && name.endsWith("\"")) {
             return name;
         }
-        if (name.contains(",")) {
-            if(name.contains("\",\"")){
-                return name;
+        if (chkname.contains("as") || chkname.contains("join")) {
+            return name;
+        }
+        name = name.trim();
+        if (name.contains(",") || name.contains(".")) {
+            if (!name.contains("\",\"")) {
+                name = name.replace(",", "\",\"");
             }
-            return "\"" + name.trim().replace(",", "\",\"") + "\"";
+            if (!name.contains("\".\"")) {
+                name = name.replace(".", "\".\"");
+            }
+            return "\"" + name + "\"";
         }
         return "\"" + name.trim() + "\"";
     }

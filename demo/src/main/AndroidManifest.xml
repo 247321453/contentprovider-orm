@@ -18,6 +18,10 @@
             android:name=".db.MyContentProvider"
             android:exported="false"
             android:authorities="${applicationId}.db.orm"/>
+        <provider
+            android:name=".game.CardContentProvider"
+            android:exported="false"
+            android:authorities="${applicationId}.db.cards"/>
     </application>
 
 </manifest>

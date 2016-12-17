@@ -9,6 +9,9 @@ import net.kk.orm.WhereBuilder;
 import net.kk.orm.demo.bean.SetBean;
 import net.kk.orm.demo.bean.StubBean;
 import net.kk.orm.demo.db.Datas;
+import net.kk.orm.demo.game.Card;
+import net.kk.orm.demo.game.CardData;
+import net.kk.orm.demo.game.CardFull;
 
 public class MainActivity extends Activity {
     Orm mOrm;
@@ -18,18 +21,13 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mOrm = new Orm(this);
-        new Thread(() -> {
-            testInsert();
-            testUpdate();
-//            testDelete();
-        }).start();
+        Log.i("orm", "init ok");
+        Log.i("orm", "cards="+mOrm.select(CardData.class).count());
+        Card card =mOrm.select(Card.class).findById(27551);
+        Log.i("orm", "card="+card);
+        CardFull card2 =mOrm.select(CardFull.class).findById(41546);
+        Log.i("orm", "card2="+card2);
     }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
     /*
 创建表，追加字段 ok
 数据转换，转义符号，特殊字段名 ok
