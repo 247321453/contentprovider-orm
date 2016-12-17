@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import net.kk.orm.demo.game.CardText;
+import net.kk.orm.demo.game.OrmCard;
 import net.kk.orm.linq.Orm;
 import net.kk.orm.demo.bean.SetBean;
 import net.kk.orm.demo.bean.StubBean;
@@ -13,6 +14,8 @@ import net.kk.orm.demo.game.Card;
 import net.kk.orm.demo.game.CardData;
 import net.kk.orm.demo.game.CardFull;
 import net.kk.orm.demo.game.CardInfo;
+
+import java.util.List;
 
 public class MainActivity extends Activity {
     Orm mOrm;
@@ -45,6 +48,9 @@ public class MainActivity extends Activity {
         Log.i("orm", "cardText=" + cardText);
         CardInfo cardInfo = mOrm.select(CardInfo.class).findFirst();
         Log.i("orm", "cardInfo=" + cardInfo);
+        List<CardInfo> cards = mOrm.select(CardInfo.class).where(OrmCard.Data.OT, "=", 2)
+                .and("(" + OrmCard.Data.LEVEL + "&0xff)", "=", 3).findAll();
+        Log.i("orm", "cards=" + cards);
     }
 
     /*
