@@ -166,7 +166,8 @@ public class OrmSelector<T> {
                 if (count > 0) {
                     exstring.append(",");
                 }
-                exstring.append(mask(column.getColumnName()));
+                exstring.append(column.getColumnName());
+                count++;
             }
         }
         if (!TextUtils.isEmpty(mLimit)) {

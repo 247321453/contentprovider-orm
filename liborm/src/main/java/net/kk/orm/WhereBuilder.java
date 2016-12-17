@@ -73,7 +73,7 @@ public class WhereBuilder<T> {
             }
         }
         mStringBuilder.append(" ");
-        mStringBuilder.append(mask(column.getColumnName()));
+        mStringBuilder.append(column.getColumnName());
         mStringBuilder.append(wrapper(op));
         mStringBuilder.append("? ");
         mOPs++;

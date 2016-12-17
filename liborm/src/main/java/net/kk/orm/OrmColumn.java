@@ -20,6 +20,7 @@ class OrmColumn extends IOrm {
     private final Class<?> mRClass;
     private IConvert<?, ?> mConvert;
     private String mDefaultText;
+    private String mColumnName;
 
     OrmColumn(Field field) {
         pClass = field.getType();
@@ -73,7 +74,7 @@ class OrmColumn extends IOrm {
     @Override
     public String toString() {
         return "OrmColumn{" +
-                "name=" + getColumnName() +
+                "name=" + getColumnNameOrg() +
                 ", Field=" + mField +
                 ", pClass=" + pClass +
                 '}';
@@ -104,10 +105,17 @@ class OrmColumn extends IOrm {
     }
 
     public String getColumnName() {
+        if (TextUtils.isEmpty(mColumnName)) {
+            mColumnName = SQLiteUtils.mask(getColumnNameOrg());
+        }
+        return mColumnName;
+    }
+
+    public String getColumnNameOrg() {
         if (TextUtils.isEmpty(mColumn.value())) {
             return mField.getName();
         }
-        return mColumn.value().trim();
+        return mColumn.value();
     }
 
     public Object toDbValue(Orm orm, Object val) {
@@ -149,7 +157,7 @@ class OrmColumn extends IOrm {
     public void write(Orm orm, Object parent, ContentValues contentValues) {
         final SQLiteType type = getSQLiteType();
         final Object val = getDbValueByParent(orm, parent);
-        final String name = getColumnName();
+        final String name = getColumnNameOrg();
         try {
             switch (type) {
                 case INTEGER:
@@ -177,10 +185,10 @@ class OrmColumn extends IOrm {
     }
 
     public Object read(Orm orm,Cursor cursor) {
-        int index = cursor.getColumnIndex(getColumnName());
+        int index = cursor.getColumnIndex(getColumnNameOrg());
         if (index < 0) {
             if (Orm.DEBUG) {
-                Log.w(Orm.TAG, "no find column " + getColumnName());
+                Log.w(Orm.TAG, "no find column " + getColumnNameOrg());
             }
             return null;
         }

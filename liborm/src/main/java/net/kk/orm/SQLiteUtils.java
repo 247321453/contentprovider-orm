@@ -23,10 +23,16 @@ class SQLiteUtils {
         }
         return result;
     }
-    public static String mask(String name){
-        if(name.startsWith("\"")&&name.endsWith("\"")){
+    public static String mask(String name) {
+        if (name.startsWith("\"") && name.endsWith("\"")) {
             return name;
         }
-        return "\""+name.trim()+"\"";
+        if (name.contains(",")) {
+            if(name.contains("\",\"")){
+                return name;
+            }
+            return "\"" + name.trim().replace(",", "\",\"") + "\"";
+        }
+        return "\"" + name.trim() + "\"";
     }
 }

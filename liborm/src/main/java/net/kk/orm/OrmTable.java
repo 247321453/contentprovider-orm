@@ -43,12 +43,12 @@ class OrmTable<T> extends IOrm {
 
     public OrmColumn getColumn(String name) {
         for (OrmColumn column : mkeyColums) {
-            if (column.getColumnName().equals(name)) {
+            if (TextUtils.equals(column.getColumnNameOrg(), name)) {
                 return column;
             }
         }
         for (OrmColumn column : mColums) {
-            if (column.getColumnName().equals(name)) {
+            if (TextUtils.equals(column.getColumnNameOrg(), name)) {
                 return column;
             }
         }
@@ -113,7 +113,7 @@ class OrmTable<T> extends IOrm {
                     continue;
                 }
             }
-            String key = column.getColumnName();
+            String key = column.getColumnNameOrg();
             if (cols != null) {
                 if (!cols.contains(key)) {
                     continue;
@@ -131,7 +131,7 @@ class OrmTable<T> extends IOrm {
             if (column.isAutoIncrement()) {
                 continue;
             }
-            String key = column.getColumnName();
+            String key = column.getColumnNameOrg();
             if (cols != null) {
                 if (!cols.contains(key)) {
                     continue;
@@ -165,10 +165,10 @@ class OrmTable<T> extends IOrm {
         if (mkeyColums.size() == 1) {
             OrmColumn column = mkeyColums.get(0);
             if (column.isAutoIncrement()) {
-                builder.append(mask(column.getColumnName()))
+                builder.append(column.getColumnName())
                         .append(" INTEGER PRIMARY KEY autoincrement");
             } else {
-                builder.append(mask(column.getColumnName()))
+                builder.append(column.getColumnName())
                         .append(" ")
                         .append(column.getColumnType())
                         .append(" PRIMARY KEY");
@@ -185,7 +185,7 @@ class OrmTable<T> extends IOrm {
                 if (kindex > 0) {
                     builder.append(",");
                 }
-                builder.append(mask(column.getColumnName()));
+                builder.append(column.getColumnName());
                 builder.append(" ");
                 builder.append(column.getColumnType());
                 if (!TextUtils.isEmpty(column.getDefaultValue())) {
@@ -201,7 +201,7 @@ class OrmTable<T> extends IOrm {
             if (builders > 0) {
                 builder.append(",");
             }
-            builder.append(mask(column.getColumnName()));
+            builder.append(column.getColumnName());
             builder.append(" ");
             builder.append(column.getColumnType());
             if (!TextUtils.isEmpty(column.getDefaultValue())) {
@@ -219,7 +219,7 @@ class OrmTable<T> extends IOrm {
                 if (kindex > 0) {
                     builder.append(",");
                 }
-                builder.append(mask(column.getColumnName()));
+                builder.append(column.getColumnName());
                 kindex++;
             }
             builder.append(")");
@@ -274,7 +274,7 @@ class OrmTable<T> extends IOrm {
             List<String> cs = Arrays.asList(cursor.getColumnNames());
             cursor.close();
             for (OrmColumn column : mColums) {
-                if (!cs.contains(column.getColumnName())) {
+                if (!cs.contains(column.getColumnNameOrg())) {
                     addColumn(db, column);
                 }
             }
@@ -286,7 +286,7 @@ class OrmTable<T> extends IOrm {
         builder.append("ALTER TABLE ")
                 .append(mask(getTableName()))
                 .append(" ADD COLUMN ")
-                .append(mask(column.getColumnName()))
+                .append(column.getColumnName())
                 .append(" ")
                 .append(column.getColumnType());
         if (!TextUtils.isEmpty(column.getDefaultValue())) {
