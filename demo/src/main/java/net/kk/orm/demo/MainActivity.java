@@ -33,7 +33,7 @@ public class MainActivity extends Activity {
         if (mOrm.select(CardInfo.class).count() == 0) {
             CardInfo cardInfo = new CardInfo(123);
             cardInfo.getData().setOt(2);
-            cardInfo.getData().setAlias(1234);
+            cardInfo.getData().setAlias(41546);
             cardInfo.getText().setName("aaa");
             mOrm.insert(cardInfo);
             CardInfo cardInfo2 = new CardInfo(1234);

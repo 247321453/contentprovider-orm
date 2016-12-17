@@ -20,6 +20,11 @@ final class DefaultColumn implements Column {
     }
 
     @Override
+    public String union() {
+        return null;
+    }
+
+    @Override
     public boolean primaryKey() {
         return false;
     }

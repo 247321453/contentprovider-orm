@@ -13,6 +13,8 @@ import android.util.Log;
 import net.kk.orm.linq.Orm;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import static net.kk.orm.utils.SQLiteUtils.mask;
 
@@ -21,6 +23,9 @@ public abstract class OrmContentProvider extends ContentProvider {
     protected abstract OrmSQLiteOpenHelper getSQLiteOpenHelper(Context context);
 
     protected OrmSQLiteOpenHelper mOrmSQLiteOpenHelper;
+    private Map<String, String> mCacheTableNames = new HashMap<>();
+    private Map<String, String> mCacheTabletypes = new HashMap<>();
+    private Map<String, String> mCacheTableIds = new HashMap<>();
 
     @Override
     public boolean onCreate() {
@@ -41,16 +46,30 @@ public abstract class OrmContentProvider extends ContentProvider {
     }
 
     protected String getIdColumn(Uri uri) {
-        return mOrmSQLiteOpenHelper.getIdColumn(uri);
+        String key = uri.toString();
+        String id = mCacheTableIds.get(key);
+        if(id == null){
+            id = mOrmSQLiteOpenHelper.getIdColumn(uri);
+            mCacheTableIds.put(key, id);
+        }
+        return id;
     }
 
     @Override
     public String getType(Uri uri) {
-        OrmTable<?> table = getTable(uri);
-        if (table != null) {
-            return makeType(table.getTableType(), isIdUri(uri));
+        String key = uri.toString();
+        String type = mCacheTabletypes.get(key);
+        if (type == null) {
+            OrmTable<?> table = getTable(uri);
+            if (table != null) {
+                type = makeType(table.getTableType(), isIdUri(uri));
+            } else {
+                type = makeType("unknown", false);
+            }
+            mCacheTabletypes.put(key, type);
         }
-        return makeType("unknown", false);
+        return type;
+
     }
 
     @SuppressWarnings("unchecked")
@@ -63,14 +82,22 @@ public abstract class OrmContentProvider extends ContentProvider {
     }
 
     public String getTableName(Uri uri) {
-        OrmTable<?> table = mOrmSQLiteOpenHelper.getTable(uri);
-        if (table == null) {
-            return null;
+        String key = uri.toString();
+        String name = mCacheTableNames.get(key);
+        if (name == null) {
+            OrmTable<?> table = mOrmSQLiteOpenHelper.getTable(uri);
+            if (table == null) {
+                mCacheTableNames.put(key, "");
+                return null;
+            }
+            if (!table.isOnlyRead()) {
+                name = mask(table.getTableName());
+            } else {
+                name = table.getTableName();
+            }
+            mCacheTableNames.put(key, name);
         }
-        if (!table.isOnlyRead()) {
-            return mask(table.getTableName());
-        }
-        return table.getTableName();
+        return name;
     }
 
     @Override
@@ -92,8 +119,8 @@ public abstract class OrmContentProvider extends ContentProvider {
         } else {
             try {
 //                if(Orm.DEBUG)
-                Log.d(Orm.TAG, "select "+ Arrays.toString(columns) +" from "+table
-                +" where "+selection+" "+Arrays.toString(selectionArgs)+" order by "+sortOrder);
+                Log.d(Orm.TAG, "select " + Arrays.toString(columns) + " from " + table
+                        + " where " + selection + " " + Arrays.toString(selectionArgs) + " order by " + sortOrder);
                 return db.query(table, columns, selection, selectionArgs, null, null, sortOrder);
             } catch (Exception e) {
                 Log.e(Orm.TAG, "query " + uri, e);
