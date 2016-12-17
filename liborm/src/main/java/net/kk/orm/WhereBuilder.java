@@ -10,19 +10,21 @@ public class WhereBuilder<T> {
     private final StringBuilder mStringBuilder;
     private final List<Object> whereItems;
     private int mOPs = 0;
+    private Orm mOrm;
 
-    private WhereBuilder() {
+    private WhereBuilder(Orm orm) {
+        this.mOrm = orm;
         whereItems = new ArrayList<>();
         mStringBuilder = new StringBuilder();
     }
 
-    public WhereBuilder(OrmTable<T> table) {
-        this();
+    WhereBuilder(Orm orm, OrmTable<T> table) {
+        this(orm);
         this.mTable = table;
     }
 
-    public WhereBuilder(Class<T> pClass) {
-        this();
+    WhereBuilder(Orm orm, Class<T> pClass) {
+        this(orm);
         this.mTable = Orm.table(pClass);
     }
 
@@ -75,7 +77,7 @@ public class WhereBuilder<T> {
         mStringBuilder.append(wrapper(op));
         mStringBuilder.append("? ");
         mOPs++;
-        this.whereItems.add(column.toDbValue(value));
+        this.whereItems.add(column.toDbValue(mOrm, value));
         return this;
     }
 

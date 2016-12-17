@@ -1,9 +1,10 @@
 package net.kk.orm.converts;
 
 
+import net.kk.orm.Orm;
 import net.kk.orm.SQLiteType;
 
-public class BooleanConvert implements IConvert<Integer, Boolean> {
+class BooleanConvert implements IConvert<Integer, Boolean> {
     public final static SQLiteType TYPE = SQLiteType.INTEGER;
     @Override
     public SQLiteType getSQLiteType() {
@@ -14,12 +15,12 @@ public class BooleanConvert implements IConvert<Integer, Boolean> {
     }
 
     @Override
-    public Boolean toValue(Integer val) {
+    public Boolean toValue(Orm orm,Integer val) {
         return val != null && val > 0;
     }
 
     @Override
-    public Integer toDbValue(Boolean value) {
+    public Integer toDbValue(Orm orm,Boolean value) {
         return value == Boolean.TRUE ? 1 : 0;
     }
 }

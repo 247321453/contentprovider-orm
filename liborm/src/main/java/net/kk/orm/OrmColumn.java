@@ -7,14 +7,9 @@ import android.util.Log;
 
 
 import net.kk.orm.annotations.Column;
-import net.kk.orm.converts.BytesConvert;
-import net.kk.orm.converts.CustomConvert;
-import net.kk.orm.converts.DoubleConvert;
-import net.kk.orm.converts.FloatConvert;
 import net.kk.orm.converts.IConvert;
-import net.kk.orm.converts.IntegerConvert;
 import net.kk.orm.converts.JsonTextConvert;
-import net.kk.orm.converts.LongConvert;
+import net.kk.orm.converts.TypeConverts;
 
 import java.lang.reflect.Field;
 
@@ -49,7 +44,7 @@ class OrmColumn extends IOrm {
             if (Orm.DEBUG) {
                 Log.w(Orm.TAG, "no find convert " + mRClass);
             }
-            mConvert = new JsonTextConvert<>(pClass);
+            mConvert = new JsonTextConvert<>(pClass, Orm.getJsonConvert());
         }
     }
 
@@ -78,7 +73,7 @@ class OrmColumn extends IOrm {
     @Override
     public String toString() {
         return "OrmColumn{" +
-                "name="+getColumnName()+
+                "name=" + getColumnName() +
                 ", Field=" + mField +
                 ", pClass=" + pClass +
                 '}';
@@ -115,56 +110,12 @@ class OrmColumn extends IOrm {
         return mColumn.value().trim();
     }
 
-    public Object toDbValue(Object val) {
+    public Object toDbValue(Orm orm, Object val) {
         if (val != null) {
             final SQLiteType type = getSQLiteType();
             try {
                 IConvert iConvert = mConvert;
-                switch (type) {
-                    case INTEGER: {
-                        IntegerConvert customConvert = (IntegerConvert) iConvert;
-                        if (customConvert != null) {
-                            val = customConvert.toDbValue((Integer) val);
-                        }
-                    }
-                    break;
-                    case LONG: {
-                        LongConvert customConvert = (LongConvert) iConvert;
-                        if (customConvert != null) {
-                            val = customConvert.toDbValue((Long) val);
-                        }
-                    }
-                    break;
-                    case DOUBLE: {
-                        DoubleConvert customConvert = (DoubleConvert) iConvert;
-                        if (customConvert != null) {
-                            val = customConvert.toDbValue((Double) val);
-                        }
-                    }
-                    break;
-                    case FLOAT: {
-                        FloatConvert customConvert = (FloatConvert) iConvert;
-                        if (customConvert != null) {
-                            val = customConvert.toDbValue((Float) val);
-                        }
-                    }
-                    break;
-                    case BLOB: {
-                        BytesConvert customConvert = (BytesConvert) iConvert;
-                        if (customConvert != null) {
-                            val = customConvert.toDbValue((byte[]) val);
-                        }
-                    }
-                    break;
-                    case TEXT:
-                    default: {
-                        CustomConvert customConvert = (CustomConvert) iConvert;
-                        if (customConvert != null) {
-                            val = customConvert.toDbValue(val);
-                        }
-                    }
-                    break;
-                }
+                val = iConvert.toDbValue(orm, val);
             } catch (Exception e) {
                 if (Orm.DEBUG) {
                     Log.w(Orm.TAG, "convert:" + val, e);
@@ -177,13 +128,13 @@ class OrmColumn extends IOrm {
         return val;
     }
 
-    public Object getDbValueByParent(Object parent) {
+    public Object getDbValueByParent(Orm orm, Object parent) {
         Object val = null;
         try {
             val = mField.get(parent);
         } catch (IllegalAccessException e) {
         }
-        return toDbValue(val);
+        return toDbValue(orm, val);
     }
 
     public Object getValue(Object parent) {
@@ -195,9 +146,9 @@ class OrmColumn extends IOrm {
         return val;
     }
 
-    public void write(Object parent, ContentValues contentValues) {
+    public void write(Orm orm, Object parent, ContentValues contentValues) {
         final SQLiteType type = getSQLiteType();
-        final Object val = getDbValueByParent(parent);
+        final Object val = getDbValueByParent(orm, parent);
         final String name = getColumnName();
         try {
             switch (type) {
@@ -225,7 +176,7 @@ class OrmColumn extends IOrm {
         }
     }
 
-    public Object read(Cursor cursor) {
+    public Object read(Orm orm,Cursor cursor) {
         int index = cursor.getColumnIndex(getColumnName());
         if (index < 0) {
             if (Orm.DEBUG) {
@@ -259,7 +210,7 @@ class OrmColumn extends IOrm {
         if (obj == null) {
             return null;
         }
-        return ((IConvert) mConvert).toValue(obj);
+        return ((IConvert) mConvert).toValue(orm, obj);
     }
 
     public void setValue(Object o, Object value) {

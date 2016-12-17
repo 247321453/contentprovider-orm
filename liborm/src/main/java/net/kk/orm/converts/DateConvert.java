@@ -1,6 +1,7 @@
 package net.kk.orm.converts;
 
 
+import net.kk.orm.Orm;
 import net.kk.orm.SQLiteType;
 
 import java.util.Date;
@@ -8,7 +9,7 @@ import java.util.Date;
 /**
  * ‘YYYY-MM-DD
  */
-public class DateConvert implements IConvert<Long, Date> {
+class DateConvert implements IConvert<Long, Date> {
     public final static SQLiteType TYPE = SQLiteType.LONG;
     @Override
     public SQLiteType getSQLiteType() {
@@ -19,12 +20,12 @@ public class DateConvert implements IConvert<Long, Date> {
     }
 
     @Override
-    public Date toValue(Long val) {
+    public Date toValue(Orm orm, Long val) {
         return new Date(val);
     }
 
     @Override
-    public Long toDbValue(Date value) {
+    public Long toDbValue(Orm orm,Date value) {
         return value.getTime();
     }
 }

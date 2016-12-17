@@ -1,6 +1,6 @@
-package net.kk.orm.utils;
+package net.kk.orm.converts;
 
-public interface IJsonConvert {
+public interface IOjectConvert {
     <T> T fromJson(String json, Class<T> classOfT);
     String toJson(Object src);
 }

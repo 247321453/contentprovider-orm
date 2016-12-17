@@ -13,7 +13,6 @@ import java.util.Map;
 public abstract class OrmSQLiteOpenHelper extends SQLiteOpenHelper {
     protected Context context;
     private Map<String, OrmTable> mTableMap = new HashMap<>();
-
     //
     protected abstract List<Class<?>> getTables();
 

@@ -3,10 +3,11 @@ package net.kk.orm.converts;
 
 import android.text.TextUtils;
 
+import net.kk.orm.Orm;
 import net.kk.orm.SQLiteType;
 import java.lang.reflect.Method;
 
-public class EnumConvert<T> implements IConvert<String, Object> {
+class EnumConvert<T> implements IConvert<String, Object> {
     public final static SQLiteType TYPE = SQLiteType.TEXT;
     private Class<T> mTClass;
 
@@ -20,7 +21,7 @@ public class EnumConvert<T> implements IConvert<String, Object> {
     }
 
     @Override
-    public Object toValue(String val) {
+    public Object toValue(Orm orm, String val) {
         if (TextUtils.isEmpty(val)) {
             return null;
         }
@@ -42,7 +43,7 @@ public class EnumConvert<T> implements IConvert<String, Object> {
     }
 
     @Override
-    public String toDbValue(Object value) {
+    public String toDbValue(Orm orm, Object value) {
         return String.valueOf(value);
     }
 }

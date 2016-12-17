@@ -4,9 +4,11 @@ import net.kk.orm.Orm;
 
 public class JsonTextConvert<T> extends CustomConvert<T> {
     private Class<T> mTClass;
+    private IOjectConvert convert;
 
-    public JsonTextConvert(Class<T> TClass) {
+    public JsonTextConvert(Class<T> TClass, IOjectConvert convert) {
         mTClass = TClass;
+        this.convert = convert;
     }
 
     protected Class<T> getType() {
@@ -14,12 +16,12 @@ public class JsonTextConvert<T> extends CustomConvert<T> {
     }
 
     @Override
-    public T toValue(String text) {
-        return Orm.getJsonConvert().fromJson(text, getType());
+    public T toValue(Orm orm, String text) {
+        return convert.fromJson(text, getType());
     }
 
     @Override
-    public String toDbValue(T value) {
-        return Orm.getJsonConvert().toJson(value);
+    public String toDbValue(Orm orm, T value) {
+        return convert.toJson(value);
     }
 }

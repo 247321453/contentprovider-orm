@@ -8,7 +8,8 @@ import android.net.Uri;
 import android.util.Log;
 
 import net.kk.orm.converts.IConvert;
-import net.kk.orm.utils.IJsonConvert;
+import net.kk.orm.converts.TypeConverts;
+import net.kk.orm.converts.IOjectConvert;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -19,7 +20,7 @@ public class Orm {
     public static final boolean DEBUG = false;
     private IContentResolver helper;
     private static Map<Class<?>, OrmTable<?>> sOrmTableHashMap = new HashMap<>();
-    private static IJsonConvert sIJsonConvert;
+    private static IOjectConvert sIJsonConvert;
 
     @SuppressWarnings("unchecked")
     public static <T> OrmTable<T> table(Class<T> pClass) {
@@ -36,11 +37,11 @@ public class Orm {
         return (OrmTable<T>) column;
     }
 
-    public static void initJson(IJsonConvert IJsonConvert) {
+    public static void initJson(IOjectConvert IJsonConvert) {
         sIJsonConvert = IJsonConvert;
     }
 
-    public static IJsonConvert getJsonConvert() {
+    public static IOjectConvert getJsonConvert() {
         return sIJsonConvert;
     }
 
@@ -65,7 +66,15 @@ public class Orm {
 
     public <T> T read(Class<T> tClass, Cursor cursor) {
         OrmTable<T> tOrmTable = table(tClass);
-        return tOrmTable.read(cursor);
+        return tOrmTable.read(this, cursor);
+    }
+
+    public <T> WhereBuilder<T> where(OrmTable<T> table) {
+        return new WhereBuilder<T>(this, table);
+    }
+
+    public <T> WhereBuilder<T> where(Class<T> pClass) {
+        return new WhereBuilder<T>(this, pClass);
     }
 
     public void register(Class<?> pClass, IConvert<?, ?> typeConvert) {
@@ -73,7 +82,7 @@ public class Orm {
     }
 
     public <T> OrmSelector<T> select(Class<T> pClass) {
-        return new OrmSelector<T>(helper, pClass);
+        return new OrmSelector<T>(this, pClass);
     }
 
     public <T> int delete(Class<T> pClass, WhereBuilder<T> whereBuilder) {
@@ -101,7 +110,7 @@ public class Orm {
         if (table == null) {
             return 0;
         }
-        WhereBuilder<T> whereBuilder = new WhereBuilder<>(table).only(object);
+        WhereBuilder<T> whereBuilder = new WhereBuilder<>(this, table).only(object);
         return delete(table.getType(), whereBuilder);
     }
 
@@ -151,7 +160,7 @@ public class Orm {
             return 0;
         }
         ContentValues contentValues = new ContentValues();
-        table.write(object, contentValues, true,
+        table.write(this, object, contentValues, true,
                 (cols == null || cols.length == 0) ? null : Arrays.asList(cols));
         return update(table.getType(), contentValues, whereBuilder, cols);
     }
@@ -166,7 +175,7 @@ public class Orm {
         if (table == null) {
             return 0;
         }
-        WhereBuilder<T> whereBuilder = new WhereBuilder<>(table).only(object);
+        WhereBuilder<T> whereBuilder = new WhereBuilder<>(this, table).only(object);
         return update(object, whereBuilder, cols);
     }
 
@@ -177,7 +186,7 @@ public class Orm {
             return 0;
         }
         ContentValues contentValues = new ContentValues();
-        table.write(object, contentValues, false, null);
+        table.write(this, object, contentValues, false, null);
         try {
             long id;
             if (table.getTableUri() != null) {

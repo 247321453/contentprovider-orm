@@ -69,7 +69,7 @@ id自增 ok
         Log.i("orm", "update set :" + mOrm.update(setBean));
         StubBean stubBean = new StubBean();
         stubBean.setAddress("223");
-        Log.i("orm", "update stub :" + mOrm.update(stubBean, new WhereBuilder<>(StubBean.class)));
+        Log.i("orm", "update stub :" + mOrm.update(stubBean, mOrm.where(StubBean.class)));
     }
 
     private void testDelete() {

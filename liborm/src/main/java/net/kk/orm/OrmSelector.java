@@ -19,10 +19,12 @@ public class OrmSelector<T> {
     private String mOffest;
     private String sql;
     private int offset = -1;
+    private Orm orm;
 
-    OrmSelector(IContentResolver helper, Class<T> pClass) {
+    OrmSelector(Orm orm, Class<T> pClass) {
         mTable = Orm.table(pClass);
-        this.helper = helper;
+        this.orm = orm;
+        this.helper = orm.getContentResolver();
     }
 
     public OrmSelector<T> limit(int count) {
@@ -62,7 +64,7 @@ public class OrmSelector<T> {
 
     public OrmSelector<T> and(String columnName, String op, Object value) {
         if (this.whereBuilder == null) {
-            this.whereBuilder = new WhereBuilder<>(mTable);
+            this.whereBuilder = new WhereBuilder<>(orm, mTable);
         }
         whereBuilder.and(columnName, op, value);
         return this;
@@ -70,7 +72,7 @@ public class OrmSelector<T> {
 
     public OrmSelector<T> in(String columnName, List<T> values) {
         if (this.whereBuilder == null) {
-            this.whereBuilder = new WhereBuilder<>(mTable);
+            this.whereBuilder = new WhereBuilder<>(orm, mTable);
         }
         whereBuilder.in(columnName, values);
         return this;
@@ -78,7 +80,7 @@ public class OrmSelector<T> {
 
     public OrmSelector<T> between(String columnName, T start, T end) {
         if (this.whereBuilder == null) {
-            this.whereBuilder = new WhereBuilder<>(mTable);
+            this.whereBuilder = new WhereBuilder<>(orm, mTable);
         }
         whereBuilder.between(columnName, start, end);
         return this;
@@ -86,7 +88,7 @@ public class OrmSelector<T> {
 
     public OrmSelector<T> or(String columnName, String op, Object value) {
         if (this.whereBuilder == null) {
-            this.whereBuilder = new WhereBuilder<>(mTable);
+            this.whereBuilder = new WhereBuilder<>(orm, mTable);
         }
         whereBuilder.or(columnName, op, value);
         return this;
@@ -111,7 +113,7 @@ public class OrmSelector<T> {
         Cursor cursor = queryAll(mTable.getAllColumns());
         if (cursor != null) {
             if (cursor.moveToFirst()) {
-                T t = mTable.read(cursor);
+                T t = mTable.read(orm, cursor);
                 return t;
             }
         }
@@ -124,7 +126,7 @@ public class OrmSelector<T> {
             List<T> list = new ArrayList<T>();
             if (cursor.moveToFirst()) {
                 do {
-                    T t = mTable.read(cursor);
+                    T t = mTable.read(orm, cursor);
                     list.add(t);
                 } while (cursor.moveToNext());
             }
@@ -155,13 +157,13 @@ public class OrmSelector<T> {
         if (!TextUtils.isEmpty(mOrderBy)) {
             exstring.append(mOrderBy);
         } else {
-            List<OrmColumn> columns=mTable.getKeyColumns();
-            if(columns==null){
+            List<OrmColumn> columns = mTable.getKeyColumns();
+            if (columns == null) {
                 return null;
             }
             int count = 0;
-            for(OrmColumn column:columns){
-                if(count>0){
+            for (OrmColumn column : columns) {
+                if (count > 0) {
                     exstring.append(",");
                 }
                 exstring.append(mask(column.getColumnName()));
@@ -183,8 +185,8 @@ public class OrmSelector<T> {
                         whereBuilder.getWhereItems(), getSortString());
             }
             return helper.query(mTable.getTableUri(), cols, null, null, getSortString());
-        }catch (Exception e){
-            Log.e(Orm.TAG, "query",e);
+        } catch (Exception e) {
+            Log.e(Orm.TAG, "query", e);
             return null;
         }
     }

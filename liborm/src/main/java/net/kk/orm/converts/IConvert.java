@@ -1,5 +1,6 @@
 package net.kk.orm.converts;
 
+import net.kk.orm.Orm;
 import net.kk.orm.SQLiteType;
 
 /**
@@ -10,8 +11,8 @@ import net.kk.orm.SQLiteType;
 public interface IConvert<D, V> {
     SQLiteType getSQLiteType();
 
-    V toValue(D d);
+    V toValue(Orm orm, D d);
 
-    D toDbValue(V value);
+    D toDbValue(Orm orm,V value);
 }
 

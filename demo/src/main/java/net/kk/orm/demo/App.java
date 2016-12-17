@@ -6,12 +6,12 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import net.kk.orm.Orm;
-import net.kk.orm.utils.IJsonConvert;
+import net.kk.orm.converts.IOjectConvert;
 
 public class App extends Application {
     static {
         //json
-        Orm.initJson(new IJsonConvert() {
+        Orm.initJson(new IOjectConvert() {
             private final Gson mGson = new GsonBuilder().create();
 
             @Override

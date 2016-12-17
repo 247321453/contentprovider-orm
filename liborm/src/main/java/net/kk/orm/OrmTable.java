@@ -75,15 +75,15 @@ class OrmTable<T> extends IOrm {
         return mUri;
     }
 
-    public T read(Cursor cursor) {
+    public T read(Orm orm, Cursor cursor) {
         T t = create(getType());
         if (t != null) {
             for (OrmColumn column : mkeyColums) {
-                Object val = column.read(cursor);
+                Object val = column.read(orm, cursor);
                 column.setValue(t, val);
             }
             for (OrmColumn column : mColums) {
-                Object val = column.read(cursor);
+                Object val = column.read(orm, cursor);
                 column.setValue(t, val);
             }
         }
@@ -99,7 +99,7 @@ class OrmTable<T> extends IOrm {
                 '}';
     }
 
-    public String write(Object t, ContentValues contentValues, boolean isupdate, List<String> cols) {
+    public String write(Orm orm, Object t, ContentValues contentValues, boolean isupdate, List<String> cols) {
         if (t == null) return null;
         StringBuilder stringBuilder = new StringBuilder();
         int count = 0;
@@ -119,7 +119,7 @@ class OrmTable<T> extends IOrm {
                     continue;
                 }
             }
-            column.write(t, contentValues);
+            column.write(orm, t, contentValues);
             if (count > 0) {
                 stringBuilder.append(",");
             }
@@ -137,7 +137,7 @@ class OrmTable<T> extends IOrm {
                     continue;
                 }
             }
-            column.write(t, contentValues);
+            column.write(orm, t, contentValues);
             if (count > 0) {
                 stringBuilder.append(",");
             }
@@ -320,7 +320,7 @@ class OrmTable<T> extends IOrm {
         OrmColumn column = new OrmColumn(field);
         if (mColumNames.contains(column.getColumnName())) {
             //字段已经存在
-            Log.w(Orm.TAG, "column is readly exist."+column);
+            Log.w(Orm.TAG, "column is readly exist." + column);
             return;
         }
         mColumNames.add(column.getColumnName());

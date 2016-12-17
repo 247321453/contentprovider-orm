@@ -1,6 +1,7 @@
 package net.kk.orm.converts;
 
 
+import net.kk.orm.Orm;
 import net.kk.orm.SQLiteType;
 
 public abstract class CustomConvert<T> implements IConvert<String, T> {
@@ -14,9 +15,9 @@ public abstract class CustomConvert<T> implements IConvert<String, T> {
     }
 
     @Override
-    public abstract T toValue(String val);
+    public abstract T toValue(Orm orm, String val);
 
     @Override
-    public abstract String toDbValue(T value);
+    public abstract String toDbValue(Orm orm,T value);
 
 }
