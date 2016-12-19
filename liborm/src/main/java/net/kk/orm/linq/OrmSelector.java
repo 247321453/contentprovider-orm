@@ -122,6 +122,7 @@ public class OrmSelector<T> {
                 T t = mTable.read(orm, cursor);
                 return t;
             }
+            cursor.close();
         }
         return null;
     }
@@ -154,6 +155,7 @@ public class OrmSelector<T> {
 
                 }
             }
+            cursor.close();
         }
         return count;
     }
