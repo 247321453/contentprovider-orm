@@ -117,7 +117,7 @@ public class OrmSelector<T> {
 
     public T findFirst() {
         T t = null;
-        Cursor cursor = queryAll(mTable.getAllColumns());
+        Cursor cursor = queryAll(true, mTable.getAllColumns());
         if (cursor != null) {
             if (cursor.moveToFirst()) {
                 t = mTable.read(orm, cursor);
@@ -128,7 +128,7 @@ public class OrmSelector<T> {
     }
 
     public List<T> findAll() {
-        Cursor cursor = queryAll(mTable.getAllColumns());
+        Cursor cursor = queryAll(true, mTable.getAllColumns());
         if (cursor != null) {
             List<T> list = new ArrayList<T>();
             if (cursor.moveToFirst()) {
@@ -146,7 +146,7 @@ public class OrmSelector<T> {
 
     public int count() {
         int count = 0;
-        Cursor cursor = queryAll(new String[]{"count(*) as c"});
+        Cursor cursor = queryAll(false, new String[]{"count(*) as c"});
         if (cursor != null) {
             if (cursor.moveToFirst()) {
                 try {
@@ -187,13 +187,13 @@ public class OrmSelector<T> {
         return exstring.toString();
     }
 
-    private Cursor queryAll(String[] cols) {
+    private Cursor queryAll(boolean sort,String[] cols) {
         try {
             if (whereBuilder != null) {
                 return helper.query(mTable.getTableUri(), cols, whereBuilder.getWhereString(),
                         whereBuilder.getWhereItems(), getSortString());
             }
-            return helper.query(mTable.getTableUri(), cols, null, null, getSortString());
+            return helper.query(mTable.getTableUri(), cols, null, null, sort?getSortString():null);
         } catch (Exception e) {
             Log.e(Orm.TAG, "query", e);
             return null;

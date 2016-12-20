@@ -90,11 +90,12 @@ public abstract class OrmContentProvider extends ContentProvider {
                 mCacheTableNames.put(key, "");
                 return null;
             }
-            if (!table.isOnlyRead()) {
-                name = mask(table.getTableName());
-            } else {
+            if(table.isOnlyRead()){
                 name = table.getTableName();
+            }else {
+                name = mask(table.getTableName());
             }
+//            Log.d("orm", table.getTableName()+" mask "+name);
             mCacheTableNames.put(key, name);
         }
         return name;
@@ -130,7 +131,7 @@ public abstract class OrmContentProvider extends ContentProvider {
         if (cursor != null) {
             cursor.setNotificationUri(getContext().getContentResolver(), uri);
         }
-        return null;
+        return cursor;
     }
 
     @Override

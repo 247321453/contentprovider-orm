@@ -33,12 +33,16 @@ class UniconKeyConvert<D, T> implements IConvert<D, T> {
     public D toDbValue(Orm orm, T value, int opera) {
         Object id = column.getValue(value);
         if (column.isEvent(opera)) {
-            if ((opera & SQLiteOpera.INSERT) == SQLiteOpera.INSERT) {
-                orm.insert(value);
-            } else if ((opera & SQLiteOpera.UPDATE) == SQLiteOpera.UPDATE) {
-                orm.update(value);
-            } else if ((opera & SQLiteOpera.DELETE) == SQLiteOpera.DELETE) {
-                orm.delete(value);
+            try {
+                if ((opera & SQLiteOpera.INSERT) == SQLiteOpera.INSERT) {
+                    orm.insert(value);
+                } else if ((opera & SQLiteOpera.UPDATE) == SQLiteOpera.UPDATE) {
+                    orm.update(value);
+                } else if ((opera & SQLiteOpera.DELETE) == SQLiteOpera.DELETE) {
+                    orm.delete(value);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
         D d = (D) column.toDbValue(orm, id, opera);

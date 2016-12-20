@@ -144,10 +144,12 @@ public class WhereBuilder<T> {
     }
 
     public String getWhereString() {
+        if(mOPs==0)return null;
         return mStringBuilder.toString();
     }
 
     public String[] getWhereItems() {
+        if(mOPs==0)return null;
         String[] items = new String[whereItems.size()];
         for (int i = 0; i < items.length; i++) {
             items[i] = String.valueOf(whereItems.get(i));

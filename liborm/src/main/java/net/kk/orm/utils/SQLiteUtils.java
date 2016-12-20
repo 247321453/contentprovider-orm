@@ -35,7 +35,7 @@ public class SQLiteUtils {
         if (name.startsWith("\"") && name.endsWith("\"")) {
             return name;
         }
-        if (chkname.contains("as") || chkname.contains("join")) {
+        if (chkname.contains(" as") || chkname.contains(" join")) {
             return name;
         }
         name = name.trim();

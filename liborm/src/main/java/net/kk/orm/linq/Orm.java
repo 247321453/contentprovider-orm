@@ -89,7 +89,7 @@ public class Orm {
         return new OrmSelector<T>(this, pClass);
     }
 
-    public <T> int delete(Class<T> pClass, WhereBuilder<T> whereBuilder) {
+    public <T> int delete(Class<T> pClass, WhereBuilder<T> whereBuilder) throws Exception {
         OrmTable<T> table = table(pClass);
         if (table == null || table.isOnlyRead()) {
             return 0;
@@ -102,13 +102,12 @@ public class Orm {
             }
             return 0;
         } catch (Exception e) {
-            Log.e(Orm.TAG, "delete", e);
-            return -1;
+            throw e;
         }
     }
 
     @SuppressWarnings("unchecked")
-    public <T> int delete(T object) {
+    public <T> int delete(T object) throws Exception {
         if (object == null) return 0;
         OrmTable<T> table = (OrmTable<T>) table(object.getClass());
         if (table == null || table.isOnlyRead()) {
@@ -121,7 +120,7 @@ public class Orm {
         return delete(table.getType(), whereBuilder);
     }
 
-    public <T> long replace(T object) {
+    public <T> long replace(T object) throws Exception {
         //检查key是否存在
         if (update(object) > 0) {
             return 1;
@@ -129,7 +128,8 @@ public class Orm {
         return insert(object);
     }
 
-    public <T> int update(Class<T> pClass, ContentValues contentValues, WhereBuilder<T> whereBuilder, String... cols) {
+    public <T> int updateAll(Class<T> pClass, ContentValues contentValues, WhereBuilder<T> whereBuilder)
+            throws Exception {
         OrmTable<T> table = table(pClass);
         if (table == null || table.isOnlyRead()) {
             return 0;
@@ -154,13 +154,12 @@ public class Orm {
             }
             return -1;
         } catch (Exception e) {
-            Log.e(Orm.TAG, "update", e);
-            return -1;
+            throw e;
         }
     }
 
     @SuppressWarnings("unchecked")
-    public <T> int update(T object, WhereBuilder<T> whereBuilder, String... cols) {
+    public <T> int update(T object, WhereBuilder<T> whereBuilder, String... cols) throws Exception {
         if (object == null) return -1;
         OrmTable<T> table = (OrmTable<T>) table(object.getClass());
         if (table == null || table.isOnlyRead()) {
@@ -169,14 +168,14 @@ public class Orm {
         ContentValues contentValues = new ContentValues();
         table.write(this, object, contentValues, SQLiteOpera.UPDATE,
                 (cols == null || cols.length == 0) ? null : Arrays.asList(cols));
-        return update(table.getType(), contentValues, whereBuilder, cols);
+        return updateAll(table.getType(), contentValues, whereBuilder);
     }
 
     /***
      * 如果没有主key，则是全部更新
      */
     @SuppressWarnings("unchecked")
-    public <T> int update(T object, String... cols) {
+    public <T> int update(T object, String... cols) throws Exception {
         if (object == null) return 0;
         OrmTable<T> table = (OrmTable<T>) table(object.getClass());
         if (table == null || table.isOnlyRead()) {
@@ -186,7 +185,7 @@ public class Orm {
         return update(object, whereBuilder, cols);
     }
 
-    public <T> long insert(T object) {
+    public <T> long insert(T object) throws Exception {
         if (object == null) return 0;
         OrmTable<?> table = table(object.getClass());
         if (table == null || table.isOnlyRead()) {
@@ -213,8 +212,7 @@ public class Orm {
             column.setId(object, id);
             return id;
         } catch (Exception e) {
-            Log.e(Orm.TAG, "insert", e);
-            return -1;
+            throw e;
         }
     }
 }

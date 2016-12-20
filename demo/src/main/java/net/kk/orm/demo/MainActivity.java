@@ -25,23 +25,31 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mOrm = new Orm(this);
-        Log.i("orm", "cards=" + mOrm.select(CardData.class).count());
-        Card card = mOrm.select(Card.class).findById(27551);
-        Log.i("orm", "card=" + card);
-        CardFull card2 = mOrm.select(CardFull.class).findById(41546);
-        Log.i("orm", "card2=" + card2);
         if (mOrm.select(CardInfo.class).count() == 0) {
             CardInfo cardInfo = new CardInfo(123);
             cardInfo.getData().setOt(2);
             cardInfo.getData().setAlias(41546);
             cardInfo.getText().setName("aaa");
-            mOrm.insert(cardInfo);
+            try {
+                mOrm.insert(cardInfo);
+                Log.i("orm", "insert cardinfo 123 ok");
+            } catch (Exception e) {
+            }
             CardInfo cardInfo2 = new CardInfo(1234);
             cardInfo2.getData().setOt(2);
             cardInfo2.getData().setAlias(1234);
             cardInfo2.getText().setName("bbb");
-            mOrm.insert(cardInfo);
+            try {
+                mOrm.insert(cardInfo);
+                Log.i("orm", "insert cardinfo 1234 ok");
+            } catch (Exception e) {
+            }
         }
+        Log.i("orm", "cards=" + mOrm.select(CardData.class).count());
+        Card card = mOrm.select(Card.class).findById(27551);
+        Log.i("orm", "card=" + card);
+        CardFull card2 = mOrm.select(CardFull.class).findById(41546);
+        Log.i("orm", "card2=" + card2);
         CardData cardData = mOrm.select(CardData.class).findById(123);
         Log.i("orm", "cardData=" + cardData);
         CardText cardText = mOrm.select(CardText.class).findById(27551);
@@ -66,7 +74,7 @@ id自增 ok
 
 查，排序，统计数量 ok
     */
-    private void testInsert() {
+    private void testInsert() throws Exception {
         int setCount = mOrm.select(SetBean.class).count();
         Log.i("orm", "setCount=" + setCount);
         if (setCount == 0) {
@@ -86,7 +94,7 @@ id自增 ok
         Log.i("orm", "add stub3:" + addStub3());
     }
 
-    private void testUpdate() {
+    private void testUpdate() throws Exception {
         SetBean setBean = mOrm.select(SetBean.class).orderBy(Datas.Set.ID, true).findFirst();
         setBean.setName("no2");
         Log.i("orm", "update set :" + mOrm.update(setBean));
@@ -95,13 +103,13 @@ id自增 ok
         Log.i("orm", "update stub :" + mOrm.update(stubBean, mOrm.where(StubBean.class)));
     }
 
-    private void testDelete() {
+    private void testDelete() throws Exception {
         StubBean stubBean = new StubBean();
         stubBean.setName("stub3");
         Log.i("orm", "delete stub :" + mOrm.delete(stubBean));
     }
 
-    private long addSet() {
+    private long addSet() throws Exception {
         SetBean setBean = new SetBean();
         setBean.setId(111);
         setBean.setName("hello");
@@ -113,21 +121,21 @@ id自增 ok
         return mOrm.insert(setBean);
     }
 
-    private long addStub1() {
+    private long addStub1() throws Exception {
         StubBean stubBean = new StubBean();
         stubBean.setName("stub");
         stubBean.setAddress("hello");
         return mOrm.insert(stubBean);
     }
 
-    private long addStub2() {
+    private long addStub2() throws Exception {
         StubBean stubBean = new StubBean();
         stubBean.setName("stub2");
         stubBean.setAddress("hello");
         return mOrm.insert(stubBean);
     }
 
-    private long addStub3() {
+    private long addStub3() throws Exception {
         StubBean stubBean = new StubBean();
         stubBean.setName("stub3");
         stubBean.setAddress("hello");
