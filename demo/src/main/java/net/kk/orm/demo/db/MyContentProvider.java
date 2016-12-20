@@ -2,9 +2,9 @@ package net.kk.orm.demo.db;
 
 import android.content.Context;
 
-import net.kk.orm.api.OrmContentProvider;
-import net.kk.orm.api.OrmSQLiteOpenHelper;
-import net.kk.orm.api.SimpleOrmSQLiteHelper;
+import net.kk.orm.api.providers.OrmContentProvider;
+import net.kk.orm.api.providers.OrmSQLiteOpenHelper;
+import net.kk.orm.api.providers.SimpleOrmSQLiteHelper;
 import net.kk.orm.demo.bean.SetBean;
 import net.kk.orm.demo.bean.StubBean;
 

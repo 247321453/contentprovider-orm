@@ -8,7 +8,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import net.kk.orm.annotations.Table;
-import net.kk.orm.linq.Orm;
+import net.kk.orm.enums.SQLiteOpera;
 import net.kk.orm.utils.SQLiteUtils;
 
 import java.lang.reflect.Field;
@@ -260,7 +260,13 @@ public class OrmTable<T> extends IOrmBase {
         }
         return null;
     }
-
+    public String getNumberKeyName() {
+        OrmColumn column = findNumberKey();
+        if (column != null) {
+            return column.getColumnName();
+        }
+        return null;
+    }
     public OrmColumn findKey() {
         return mkeyColums.size() > 0 ? mkeyColums.get(0) : null;
     }

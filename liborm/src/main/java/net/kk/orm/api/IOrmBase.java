@@ -2,8 +2,6 @@ package net.kk.orm.api;
 
 import android.util.Log;
 
-import net.kk.orm.linq.Orm;
-
 import java.lang.reflect.Constructor;
 
 abstract class IOrmBase {

@@ -7,8 +7,9 @@ import android.util.Log;
 
 import net.kk.orm.annotations.Column;
 import net.kk.orm.converts.IConvert;
+import net.kk.orm.converts.JsonTextConvert;
 import net.kk.orm.converts.TypeConverts;
-import net.kk.orm.linq.Orm;
+import net.kk.orm.enums.SQLiteType;
 import net.kk.orm.utils.SQLiteUtils;
 
 import java.lang.reflect.Field;
@@ -16,7 +17,7 @@ import java.lang.reflect.Field;
 /**
  * @hide
  */
-public class OrmColumn extends IOrmBase {
+class OrmColumn extends IOrmBase {
     private Column mColumn;
     private Field mField;
     private final Class<?> pClass;
@@ -34,7 +35,10 @@ public class OrmColumn extends IOrmBase {
             mColumn = new DefaultColumn(field);
         }
         if (mColumn.convert().equals(IConvert.class)) {
-            mConvert = TypeConverts.get().find(pClass, mColumn);
+            mConvert = TypeConverts.get().find(mRClass, mColumn);
+            if (mConvert == null) {
+                mConvert = createUniconKeyConvert(mRClass, mColumn);
+            }
         } else {
             try {
                 mConvert = mColumn.convert().newInstance();
@@ -44,6 +48,43 @@ public class OrmColumn extends IOrmBase {
                 }
             }
         }
+        if (mConvert == null) {
+            mConvert = new JsonTextConvert<>(mRClass, Orm.getJsonConvert());
+            TypeConverts.get().register(mRClass, mConvert);
+        }
+    }
+
+    private IConvert<?, ?> createUniconKeyConvert(Class<?> type, Column column) {
+        IConvert<?, ?> typeConvert = null;
+        String col = null;
+        OrmTable<?> tOrmTable = Orm.table(type);
+        OrmColumn ormColumn = null;
+        if (TextUtils.isEmpty(column.unionName())) {
+            ormColumn = tOrmTable.findKey();
+            if (ormColumn != null) {
+                col = ormColumn.getColumnName();
+            }
+        } else {
+            col = column.value();
+            ormColumn = tOrmTable.getColumn(col);
+        }
+        if (col != null && ormColumn != null) {
+            String key2 = type.getName() + "@" + col;
+            typeConvert = TypeConverts.get().getUniconKey(key2);
+            if (typeConvert == null) {
+                if (Integer.class.equals(ormColumn.getType())) {
+                    typeConvert = new UniconKeyConvert<>(type, Integer.class, ormColumn);
+                } else if (Long.class.equals(ormColumn.getType())) {
+                    typeConvert = new UniconKeyConvert<>(type, Long.class, ormColumn);
+                } else if (String.class.equals(ormColumn.getType())) {
+                    typeConvert = new UniconKeyConvert<>(type, String.class, ormColumn);
+                }
+                if (typeConvert != null) {
+                    TypeConverts.get().registerUniconKey(key2, typeConvert);
+                }
+            }
+        }
+        return typeConvert;
     }
 
     public Column getColumn() {

@@ -1,7 +1,7 @@
 package net.kk.orm.annotations;
 
 
-import net.kk.orm.api.SQLiteOpera;
+import net.kk.orm.enums.SQLiteOpera;
 import net.kk.orm.converts.IConvert;
 
 import java.lang.annotation.ElementType;

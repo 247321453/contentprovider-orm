@@ -1,4 +1,4 @@
-package net.kk.orm.api;
+package net.kk.orm.api.providers;
 
 import android.content.ContentProvider;
 import android.content.ContentUris;
@@ -10,7 +10,8 @@ import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
 
-import net.kk.orm.linq.Orm;
+import net.kk.orm.api.Orm;
+import net.kk.orm.api.OrmTable;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -85,7 +86,7 @@ public abstract class OrmContentProvider extends ContentProvider {
         String key = uri.toString();
         String name = mCacheTableNames.get(key);
         if (name == null) {
-            OrmTable<?> table = mOrmSQLiteOpenHelper.getTable(uri);
+            OrmTable<?> table = getTable(uri);
             if (table == null) {
                 mCacheTableNames.put(key, "");
                 return null;

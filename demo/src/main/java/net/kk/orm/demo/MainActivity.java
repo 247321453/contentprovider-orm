@@ -6,7 +6,7 @@ import android.util.Log;
 
 import net.kk.orm.demo.game.CardText;
 import net.kk.orm.demo.game.OrmCard;
-import net.kk.orm.linq.Orm;
+import net.kk.orm.api.Orm;
 import net.kk.orm.demo.bean.SetBean;
 import net.kk.orm.demo.bean.StubBean;
 import net.kk.orm.demo.db.Datas;

@@ -1,9 +1,8 @@
-package net.kk.orm.converts;
+package net.kk.orm.api;
 
-import net.kk.orm.api.SQLiteOpera;
-import net.kk.orm.linq.Orm;
-import net.kk.orm.api.OrmColumn;
-import net.kk.orm.api.SQLiteType;
+import net.kk.orm.converts.IConvert;
+import net.kk.orm.enums.SQLiteOpera;
+import net.kk.orm.enums.SQLiteType;
 
 class UniconKeyConvert<D, T> implements IConvert<D, T> {
     private Class<T> pClass;

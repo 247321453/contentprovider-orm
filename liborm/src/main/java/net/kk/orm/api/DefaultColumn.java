@@ -3,6 +3,7 @@ package net.kk.orm.api;
 
 import net.kk.orm.annotations.Column;
 import net.kk.orm.converts.IConvert;
+import net.kk.orm.enums.SQLiteOpera;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;

@@ -1,12 +1,15 @@
-package net.kk.orm.api;
+package net.kk.orm.api.providers;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
+import android.text.TextUtils;
 import android.util.Log;
 
-import net.kk.orm.linq.Orm;
+import net.kk.orm.api.IContentResolver;
+import net.kk.orm.api.Orm;
+import net.kk.orm.api.OrmTable;
 
 import java.util.HashMap;
 import java.util.List;
@@ -59,10 +62,7 @@ public abstract class OrmSQLiteOpenHelper extends SQLiteOpenHelper {
     public String getIdColumn(Uri uri) {
         OrmTable<?> table = getTable(uri);
         if (table != null) {
-            OrmColumn column = table.findNumberKey();
-            if (column != null) {
-                return column.getColumnName();
-            }
+            return table.getNumberKeyName();
         }
         return null;
     }
@@ -77,8 +77,7 @@ public abstract class OrmSQLiteOpenHelper extends SQLiteOpenHelper {
                 OrmTable<?> tOrmTable = Orm.table(c);
                 mTableMap.put(tOrmTable.getTableUri().toString(), tOrmTable);
                 if (!tOrmTable.isOnlyRead()) {
-                    OrmColumn column = tOrmTable.findNumberKey();
-                    if (column != null) {
+                    if (!TextUtils.isEmpty(tOrmTable.getNumberKeyName())) {
                         mTableMap.put(tOrmTable.getTableUri()
                                         .buildUpon()
                                         .appendEncodedPath(LAST_ID)

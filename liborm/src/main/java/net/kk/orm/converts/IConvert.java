@@ -1,8 +1,7 @@
 package net.kk.orm.converts;
 
-import net.kk.orm.api.SQLiteOpera;
-import net.kk.orm.linq.Orm;
-import net.kk.orm.api.SQLiteType;
+import net.kk.orm.api.Orm;
+import net.kk.orm.enums.SQLiteType;
 
 /**
  * int[] List/Integer

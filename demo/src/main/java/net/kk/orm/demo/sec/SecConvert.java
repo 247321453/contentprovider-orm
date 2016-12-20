@@ -1,8 +1,7 @@
 package net.kk.orm.demo.sec;
 
 
-import net.kk.orm.api.SQLiteOpera;
-import net.kk.orm.linq.Orm;
+import net.kk.orm.api.Orm;
 import net.kk.orm.converts.CustomConvert;
 import net.kk.orm.demo.crypto.DESUtils;
 

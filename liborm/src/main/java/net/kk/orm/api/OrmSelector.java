@@ -1,12 +1,8 @@
-package net.kk.orm.linq;
+package net.kk.orm.api;
 
 import android.database.Cursor;
 import android.text.TextUtils;
 import android.util.Log;
-
-import net.kk.orm.api.OrmColumn;
-import net.kk.orm.api.OrmTable;
-import net.kk.orm.api.IContentResolver;
 
 import java.util.ArrayList;
 import java.util.List;

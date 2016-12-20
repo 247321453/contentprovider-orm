@@ -1,8 +1,6 @@
-package net.kk.orm.linq;
+package net.kk.orm.api;
 
-import net.kk.orm.api.OrmColumn;
-import net.kk.orm.api.OrmTable;
-import net.kk.orm.api.SQLiteOpera;
+import net.kk.orm.enums.SQLiteOpera;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +25,7 @@ public class WhereBuilder<T> {
         this.mTable = table;
     }
 
-    WhereBuilder(Orm orm, Class<T> pClass) {
+    public WhereBuilder(Orm orm, Class<T> pClass) {
         this(orm);
         this.mTable = Orm.table(pClass);
     }

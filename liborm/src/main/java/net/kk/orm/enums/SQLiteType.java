@@ -1,4 +1,4 @@
-package net.kk.orm.api;
+package net.kk.orm.enums;
 
 public enum SQLiteType {
     INTEGER,

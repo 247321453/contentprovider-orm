@@ -1,4 +1,4 @@
-package net.kk.orm.linq;
+package net.kk.orm.api;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;

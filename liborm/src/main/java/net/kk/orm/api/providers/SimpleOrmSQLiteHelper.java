@@ -1,8 +1,10 @@
-package net.kk.orm.api;
+package net.kk.orm.api.providers;
 
 import android.content.Context;
 
-import net.kk.orm.linq.Orm;
+import net.kk.orm.api.IContentResolver;
+import net.kk.orm.api.Orm;
+import net.kk.orm.api.providers.OrmSQLiteOpenHelper;
 
 import java.util.List;
 

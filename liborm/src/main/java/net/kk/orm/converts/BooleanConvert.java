@@ -1,9 +1,8 @@
 package net.kk.orm.converts;
 
 
-import net.kk.orm.api.SQLiteOpera;
-import net.kk.orm.linq.Orm;
-import net.kk.orm.api.SQLiteType;
+import net.kk.orm.api.Orm;
+import net.kk.orm.enums.SQLiteType;
 
 class BooleanConvert implements IConvert<Integer, Boolean> {
     public final static SQLiteType TYPE = SQLiteType.INTEGER;

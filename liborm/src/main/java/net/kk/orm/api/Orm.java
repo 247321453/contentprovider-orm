@@ -1,4 +1,4 @@
-package net.kk.orm.linq;
+package net.kk.orm.api;
 
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -7,13 +7,10 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
 
-import net.kk.orm.api.OrmColumn;
-import net.kk.orm.api.OrmTable;
-import net.kk.orm.api.IContentResolver;
-import net.kk.orm.api.SQLiteOpera;
 import net.kk.orm.converts.IConvert;
 import net.kk.orm.converts.TypeConverts;
 import net.kk.orm.converts.IOjectConvert;
+import net.kk.orm.enums.SQLiteOpera;
 
 import java.util.Arrays;
 import java.util.HashMap;

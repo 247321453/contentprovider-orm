@@ -1,14 +1,11 @@
 package net.kk.orm.converts;
 
 
-import android.text.TextUtils;
 import android.util.Log;
 
 import net.kk.orm.annotations.Column;
-import net.kk.orm.api.OrmTable;
-import net.kk.orm.linq.Orm;
-import net.kk.orm.api.OrmColumn;
-import net.kk.orm.api.SQLiteType;
+import net.kk.orm.api.Orm;
+import net.kk.orm.enums.SQLiteType;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -43,8 +40,12 @@ public class TypeConverts {
         }
     }
 
-    public boolean isSupport(Class<?> pClass) {
-        return CLASS_TYPE_CONVERT_MAP.containsKey(wrapper(pClass));
+    public void registerUniconKey(String key, IConvert<?, ?> typeConvert) {
+        CLASS_ID_CONVERT_MAP.put(key, typeConvert);
+    }
+
+    public IConvert<?, ?> getUniconKey(String key) {
+        return CLASS_ID_CONVERT_MAP.get(key);
     }
 
     public IConvert<?, ?> find(Class<?> type, Column column) {
@@ -59,41 +60,12 @@ public class TypeConverts {
             if (type.isEnum()) {
                 typeConvert = new EnumConvert<>(type);
                 CLASS_TYPE_CONVERT_MAP.put(key, typeConvert);
-            } else {
-                String col = null;
-                OrmTable<?> tOrmTable = Orm.table(type);
-                OrmColumn ormColumn = null;
-                if (TextUtils.isEmpty(column.unionName())) {
-                    ormColumn = tOrmTable.findKey();
-                    if (ormColumn != null) {
-                        col = ormColumn.getColumnName();
-                    }
-                } else {
-                    col = column.value();
-                    ormColumn = tOrmTable.getColumn(col);
-                }
-                if (col != null && ormColumn != null) {
-                    String key2 = type.getName() + "@" + col;
-                    typeConvert = CLASS_ID_CONVERT_MAP.get(key2);
-                    if (typeConvert == null) {
-                        if (Integer.class.equals(ormColumn.getType())) {
-                            typeConvert = new UniconKeyConvert<>(type, Integer.class, ormColumn);
-                            CLASS_ID_CONVERT_MAP.put(key2, typeConvert);
-                        } else if (Long.class.equals(ormColumn.getType())) {
-                            typeConvert = new UniconKeyConvert<>(type, Long.class, ormColumn);
-                            CLASS_ID_CONVERT_MAP.put(key2, typeConvert);
-                        } else if (String.class.equals(ormColumn.getType())) {
-                            typeConvert = new UniconKeyConvert<>(type, String.class, ormColumn);
-                            CLASS_ID_CONVERT_MAP.put(key2, typeConvert);
-                        }
-                    }
-                }
             }
         }
-        if (typeConvert == null) {
-            typeConvert = new JsonTextConvert<>(type, Orm.getJsonConvert());
-            CLASS_TYPE_CONVERT_MAP.put(key, typeConvert);
-        }
+//        if (typeConvert == null) {
+//            typeConvert = new JsonTextConvert<>(type, Orm.getJsonConvert());
+//            CLASS_TYPE_CONVERT_MAP.put(key, typeConvert);
+//        }
         return typeConvert;
     }
 
