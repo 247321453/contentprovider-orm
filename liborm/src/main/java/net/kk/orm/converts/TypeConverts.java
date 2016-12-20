@@ -63,7 +63,7 @@ public class TypeConverts {
                 String col = null;
                 OrmTable<?> tOrmTable = Orm.table(type);
                 OrmColumn ormColumn = null;
-                if (TextUtils.isEmpty(column.union())) {
+                if (TextUtils.isEmpty(column.unionName())) {
                     ormColumn = tOrmTable.findKey();
                     if (ormColumn != null) {
                         col = ormColumn.getColumnName();

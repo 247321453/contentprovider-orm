@@ -21,7 +21,7 @@ class BooleanConvert implements IConvert<Integer, Boolean> {
     }
 
     @Override
-    public Integer toDbValue(Orm orm,Boolean value,SQLiteOpera opera) {
+    public Integer toDbValue(Orm orm,Boolean value,int opera) {
         return value == Boolean.TRUE ? 1 : 0;
     }
 }

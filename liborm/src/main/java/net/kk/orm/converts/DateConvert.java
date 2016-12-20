@@ -26,7 +26,7 @@ class DateConvert implements IConvert<Long, Date> {
     }
 
     @Override
-    public Long toDbValue(Orm orm,Date value,SQLiteOpera opera) {
+    public Long toDbValue(Orm orm,Date value,int opera) {
         return value.getTime();
     }
 }

@@ -124,7 +124,7 @@ public class OrmSelector<T> {
             }
             cursor.close();
         }
-        return null;
+        return t;
     }
 
     public List<T> findAll() {
@@ -152,7 +152,7 @@ public class OrmSelector<T> {
                 try {
                     count = cursor.getInt(cursor.getColumnIndex("c"));
                 } catch (Exception e) {
-
+                    Log.w(Orm.TAG, "count", e);
                 }
             }
             cursor.close();

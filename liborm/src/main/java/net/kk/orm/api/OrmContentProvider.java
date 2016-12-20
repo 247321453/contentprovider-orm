@@ -48,7 +48,7 @@ public abstract class OrmContentProvider extends ContentProvider {
     protected String getIdColumn(Uri uri) {
         String key = uri.toString();
         String id = mCacheTableIds.get(key);
-        if(id == null){
+        if (id == null) {
             id = mOrmSQLiteOpenHelper.getIdColumn(uri);
             mCacheTableIds.put(key, id);
         }
@@ -106,13 +106,14 @@ public abstract class OrmContentProvider extends ContentProvider {
         final String table = getTableName(uri);
         if (TextUtils.isEmpty(table)) return null;
         SQLiteDatabase db = mOrmSQLiteOpenHelper.getReadableDatabase();
+        Cursor cursor = null;
         if (isIdUri(uri)) {
             long id = ContentUris.parseId(uri);
             String idName = getIdColumn(uri);
             String where = idName + "=" + id;// 获取指定id的记录
             where += !TextUtils.isEmpty(selection) ? " and (" + selection + ")" : "";
             try {
-                return db.query(table, columns, where, selectionArgs, null, null, sortOrder);
+                cursor = db.query(table, columns, where, selectionArgs, null, null, sortOrder);
             } catch (Exception e) {
                 Log.e(Orm.TAG, "query " + uri, e);
             }
@@ -121,10 +122,13 @@ public abstract class OrmContentProvider extends ContentProvider {
 //                if(Orm.DEBUG)
                 Log.d(Orm.TAG, "select " + Arrays.toString(columns) + " from " + table
                         + " where " + selection + " " + Arrays.toString(selectionArgs) + " order by " + sortOrder);
-                return db.query(table, columns, selection, selectionArgs, null, null, sortOrder);
+                cursor = db.query(table, columns, selection, selectionArgs, null, null, sortOrder);
             } catch (Exception e) {
                 Log.e(Orm.TAG, "query " + uri, e);
             }
+        }
+        if (cursor != null) {
+            cursor.setNotificationUri(getContext().getContentResolver(), uri);
         }
         return null;
     }
@@ -140,11 +144,12 @@ public abstract class OrmContentProvider extends ContentProvider {
             String idName = getIdColumn(uri);
             values.put(idName, id);
             db.insert(table, null, values);
-            return uri;
         } else {
             long id = db.insert(table, null, values);
-            return ContentUris.withAppendedId(uri, id);
+            uri = ContentUris.withAppendedId(uri, id);
         }
+        getContext().getContentResolver().notifyChange(uri, null);
+        return uri;
     }
 
     @Override
@@ -153,15 +158,18 @@ public abstract class OrmContentProvider extends ContentProvider {
         final String table = getTableName(uri);
         if (TextUtils.isEmpty(table)) return 0;
         SQLiteDatabase db = mOrmSQLiteOpenHelper.getWritableDatabase();
+        int count;
         if (isIdUri(uri)) {
             long id = ContentUris.parseId(uri);
             String idName = getIdColumn(uri);
             String where = idName + "=" + id;
             where += !TextUtils.isEmpty(selection) ? " and (" + selection + ")" : "";
-            return db.delete(table, where, selectionArgs);
+            count = db.delete(table, where, selectionArgs);
         } else {
-            return db.delete(table, selection, selectionArgs);
+            count = db.delete(table, selection, selectionArgs);
         }
+        getContext().getContentResolver().notifyChange(uri, null);
+        return count;
     }
 
     @Override
@@ -170,14 +178,17 @@ public abstract class OrmContentProvider extends ContentProvider {
         final String table = getTableName(uri);
         if (TextUtils.isEmpty(table)) return 0;
         SQLiteDatabase db = mOrmSQLiteOpenHelper.getWritableDatabase();
+        int count;
         if (isIdUri(uri)) {
             long id = ContentUris.parseId(uri);
             String idName = getIdColumn(uri);
             String where = idName + "=" + id;
             where += !TextUtils.isEmpty(selection) ? " and (" + selection + ")" : "";
-            return db.update(table, values, where, selectionArgs);
+            count = db.update(table, values, where, selectionArgs);
         } else {
-            return db.update(table, values, selection, selectionArgs);
+            count = db.update(table, values, selection, selectionArgs);
         }
+        getContext().getContentResolver().notifyChange(uri, null);
+        return count;
     }
 }

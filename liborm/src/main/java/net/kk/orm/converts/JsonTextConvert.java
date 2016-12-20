@@ -22,7 +22,7 @@ public class JsonTextConvert<T> extends CustomConvert<T> {
     }
 
     @Override
-    public String toDbValue(Orm orm, T value, SQLiteOpera opera) {
+    public String toDbValue(Orm orm, T value, int opera) {
         return convert.toJson(value);
     }
 }

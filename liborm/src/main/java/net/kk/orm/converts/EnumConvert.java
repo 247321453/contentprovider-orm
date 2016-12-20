@@ -45,7 +45,7 @@ class EnumConvert<T> implements IConvert<String, Object> {
     }
 
     @Override
-    public String toDbValue(Orm orm, Object value, SQLiteOpera opera) {
+    public String toDbValue(Orm orm, Object value, int opera) {
         return String.valueOf(value);
     }
 }

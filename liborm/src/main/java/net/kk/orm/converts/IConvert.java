@@ -14,6 +14,6 @@ public interface IConvert<D, V> {
 
     V toValue(Orm orm, D d);
 
-    D toDbValue(Orm orm,V value,SQLiteOpera opera);
+    D toDbValue(Orm orm,V value,int opera);
 }
 

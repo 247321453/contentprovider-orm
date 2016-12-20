@@ -24,7 +24,7 @@ class SameConvert<T> implements IConvert<T, T> {
     }
 
     @Override
-    public T toDbValue(Orm orm, T value, SQLiteOpera opera) {
+    public T toDbValue(Orm orm, T value, int opera) {
         return value;
     }
 }

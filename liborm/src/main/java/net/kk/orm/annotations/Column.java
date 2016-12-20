@@ -1,6 +1,7 @@
 package net.kk.orm.annotations;
 
 
+import net.kk.orm.api.SQLiteOpera;
 import net.kk.orm.converts.IConvert;
 
 import java.lang.annotation.ElementType;
@@ -17,11 +18,23 @@ public @interface Column {
 
     boolean autoIncrement() default false;
 
-    String union() default "";
     /***
      * 默认值
      */
     String defaultValue() default "___NULL";
 
+    /***
+     * 联合的自定义字段，默认是表的keyId
+     */
+    String unionName() default "";
+
+    /***
+     * 用于外键触发处理
+     */
+    int eventFlags() default (SQLiteOpera.INSERT | SQLiteOpera.DELETE | SQLiteOpera.UPDATE);
+
+    /***
+     * 自定义转换
+     */
     Class<? extends IConvert> convert() default IConvert.class;
 }

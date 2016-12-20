@@ -20,7 +20,7 @@ final class DefaultColumn implements Column {
     }
 
     @Override
-    public String union() {
+    public String unionName() {
         return null;
     }
 
@@ -39,6 +39,10 @@ final class DefaultColumn implements Column {
         return null;
     }
 
+    @Override
+    public int eventFlags() {
+        return SQLiteOpera.INSERT|SQLiteOpera.UPDATE|SQLiteOpera.DELETE;
+    }
 
     @Override
     public Class<? extends IConvert> convert() {

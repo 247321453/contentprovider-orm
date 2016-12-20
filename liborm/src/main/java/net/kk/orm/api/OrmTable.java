@@ -100,7 +100,7 @@ public class OrmTable<T> extends IOrmBase {
                 '}';
     }
 
-    public String write(Orm orm, Object t, ContentValues contentValues, SQLiteOpera opera, List<String> cols) {
+    public String write(Orm orm, Object t, ContentValues contentValues, int opera, List<String> cols) {
         if (t == null) return null;
         StringBuilder stringBuilder = new StringBuilder();
         int count = 0;
@@ -109,7 +109,7 @@ public class OrmTable<T> extends IOrmBase {
             if (column.isAutoIncrement()) {
                 continue;
             }
-            if (opera == SQLiteOpera.UPDATE) {
+            if ((opera & SQLiteOpera.UPDATE) == SQLiteOpera.UPDATE) {
                 if (column.isPrimaryKey()) {
                     continue;
                 }

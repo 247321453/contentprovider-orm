@@ -24,21 +24,22 @@ class UniconKeyConvert<D, T> implements IConvert<D, T> {
     @Override
     public T toValue(Orm orm, D id) {
 //        Log.d("orm", "class=" + pClass + ",id=" + id);
-        T t = orm.select(pClass).where(column.getColumnName(),"=", id).findFirst();
+        T t = orm.select(pClass).where(column.getColumnName(), "=", id).findFirst();
 //        Log.d("orm", "to T " + t);
         return t;
     }
 
     @Override
-    public D toDbValue(Orm orm, T value, SQLiteOpera opera) {
+    public D toDbValue(Orm orm, T value, int opera) {
         Object id = column.getValue(value);
-        if (opera == SQLiteOpera.INSERT) {
-            orm.insert(value);
-        } else if (opera == SQLiteOpera.UPDATE) {
-            orm.update(value);
-        } else if (opera == SQLiteOpera.DELETE) {
-            //TODO 理论触发不了，得手动删除
-            orm.delete(value);
+        if (column.isEvent(opera)) {
+            if ((opera & SQLiteOpera.INSERT) == SQLiteOpera.INSERT) {
+                orm.insert(value);
+            } else if ((opera & SQLiteOpera.UPDATE) == SQLiteOpera.UPDATE) {
+                orm.update(value);
+            } else if ((opera & SQLiteOpera.DELETE) == SQLiteOpera.DELETE) {
+                orm.delete(value);
+            }
         }
         D d = (D) column.toDbValue(orm, id, opera);
         return d;

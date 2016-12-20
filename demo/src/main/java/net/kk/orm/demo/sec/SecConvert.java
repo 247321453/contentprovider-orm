@@ -20,7 +20,7 @@ public class SecConvert extends CustomConvert<String> {
     }
 
     @Override
-    public String toDbValue(Orm orm, String value,SQLiteOpera opera) {
+    public String toDbValue(Orm orm, String value,int opera) {
         //加密
         return DESUtils.encrypt(value, TAG);
     }

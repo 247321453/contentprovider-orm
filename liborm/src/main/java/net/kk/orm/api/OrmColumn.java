@@ -68,6 +68,10 @@ public class OrmColumn extends IOrmBase {
         return mColumn.autoIncrement();
     }
 
+    public boolean isEvent(int opera) {
+        return (opera & mColumn.eventFlags()) == opera;
+    }
+
     @Override
     public String toString() {
         return "OrmColumn{" +
@@ -115,7 +119,7 @@ public class OrmColumn extends IOrmBase {
         return mColumn.value();
     }
 
-    public Object toDbValue(Orm orm, Object val, SQLiteOpera opera) {
+    public Object toDbValue(Orm orm, Object val, int opera) {
         if (val != null) {
             try {
                 IConvert iConvert = mConvert;
@@ -132,7 +136,7 @@ public class OrmColumn extends IOrmBase {
         return val;
     }
 
-    public Object getDbValueByParent(Orm orm, Object parent, SQLiteOpera opera) {
+    public Object getDbValueByParent(Orm orm, Object parent, int opera) {
         Object val = null;
         try {
             val = mField.get(parent);
@@ -150,7 +154,7 @@ public class OrmColumn extends IOrmBase {
         return val;
     }
 
-    public void write(Orm orm, Object parent, ContentValues contentValues, SQLiteOpera opera) {
+    public void write(Orm orm, Object parent, ContentValues contentValues, int opera) {
         final SQLiteType type = getSQLiteType();
         final Object val = getDbValueByParent(orm, parent, opera);
         final String name = getColumnNameOrg();
