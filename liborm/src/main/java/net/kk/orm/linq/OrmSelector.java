@@ -116,11 +116,11 @@ public class OrmSelector<T> {
     }
 
     public T findFirst() {
+        T t = null;
         Cursor cursor = queryAll(mTable.getAllColumns());
         if (cursor != null) {
             if (cursor.moveToFirst()) {
-                T t = mTable.read(orm, cursor);
-                return t;
+                t = mTable.read(orm, cursor);
             }
             cursor.close();
         }
