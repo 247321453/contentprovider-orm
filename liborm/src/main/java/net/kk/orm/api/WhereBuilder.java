@@ -77,7 +77,7 @@ public class WhereBuilder<T> {
         mStringBuilder.append(" ");
         mStringBuilder.append(column.getColumnName());
         mStringBuilder.append(wrapper(op));
-        mStringBuilder.append("? ");
+        mStringBuilder.append(" ? ");
         mOPs++;
         this.whereItems.add(column.toDbValue(mOrm, value, SQLiteOpera.QUERY));
         return this;

@@ -52,7 +52,7 @@ public class MainActivity extends Activity {
         Log.i("orm", "card2=" + card2);
         CardData cardData = mOrm.select(CardData.class).findById(123);
         Log.i("orm", "cardData=" + cardData);
-        CardText cardText = mOrm.select(CardText.class).findById(27551);
+        CardText cardText = mOrm.select(CardText.class).where(OrmCard.Text.DESC, "like", "%光波%").findFirst();
         Log.i("orm", "cardText=" + cardText);
         CardInfo cardInfo = mOrm.select(CardInfo.class).findFirst();
         Log.i("orm", "cardInfo=" + cardInfo);
