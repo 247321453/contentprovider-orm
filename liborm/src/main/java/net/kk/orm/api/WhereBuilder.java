@@ -76,6 +76,7 @@ public class WhereBuilder<T> {
         }
         mStringBuilder.append(" ");
         mStringBuilder.append(column.getColumnName());
+        mStringBuilder.append(" ");
         mStringBuilder.append(wrapper(op));
         mStringBuilder.append(" ? ");
         mOPs++;
