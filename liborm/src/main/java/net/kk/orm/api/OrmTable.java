@@ -164,8 +164,15 @@ public class OrmTable<T> extends IOrmBase {
     }
 
     public void onCreate(SQLiteDatabase db) {
-        if (SQLiteUtils.tabbleIsExist(db, getTableName())) {
+        try {
+            Cursor cursor = db.rawQuery("select * from " + mask(getTableName()) + ";", null);
+            if (cursor != null) {
+                cursor.close();
+            }
+            //查询没问题，表存在
             return;
+        } catch (Exception e) {
+
         }
         StringBuilder builder = new StringBuilder();
         builder.append("create table ");
@@ -260,6 +267,7 @@ public class OrmTable<T> extends IOrmBase {
         }
         return null;
     }
+
     public String getNumberKeyName() {
         OrmColumn column = findNumberKey();
         if (column != null) {
@@ -267,6 +275,7 @@ public class OrmTable<T> extends IOrmBase {
         }
         return null;
     }
+
     public OrmColumn findKey() {
         return mkeyColums.size() > 0 ? mkeyColums.get(0) : null;
     }
@@ -285,9 +294,13 @@ public class OrmTable<T> extends IOrmBase {
     }
 
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        //检查字段
-        if (SQLiteUtils.tabbleIsExist(db, getTableName())) ;
-        Cursor cursor = db.rawQuery("select * from " + mask(getTableName()) + " limit 1;", null);
+        Cursor cursor = null;
+        try {
+            cursor = db.rawQuery("select * from " + mask(getTableName()) + " limit 1;", null);
+        } catch (Exception e) {
+            onCreate(db);
+            return;
+        }
         if (cursor != null) {
             List<String> cs = Arrays.asList(cursor.getColumnNames());
             cursor.close();
