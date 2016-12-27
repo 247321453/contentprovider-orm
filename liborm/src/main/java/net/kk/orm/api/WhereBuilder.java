@@ -39,7 +39,22 @@ public class WhereBuilder<T> {
         }
         return this;
     }
-
+    public WhereBuilder<T> onlyOrAll(T t) {
+        List<OrmColumn> columns = mTable.getKeyColumns();
+        if (columns != null) {
+            for (OrmColumn column : columns) {
+                op(column, "=", column.getValue(t), true);
+            }
+        }else{
+            columns = mTable.getNoralColums();
+            if(columns!=null){
+                for (OrmColumn column : columns) {
+                    op(column, "=", column.getValue(t), true);
+                }
+            }
+        }
+        return this;
+    }
     private WhereBuilder<T> op(WhereBuilder whereBuilder, boolean isAnd) {
         if (whereBuilder.mOPs > 0) {
             if (mOPs > 0) {

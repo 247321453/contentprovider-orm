@@ -9,7 +9,6 @@ import android.util.Log;
 
 import net.kk.orm.annotations.Table;
 import net.kk.orm.enums.SQLiteOpera;
-import net.kk.orm.utils.SQLiteUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -282,6 +281,10 @@ public class OrmTable<T> extends IOrmBase {
 
     public List<OrmColumn> getKeyColumns() {
         return mkeyColums;
+    }
+
+    public List<OrmColumn> getNoralColums() {
+        return mColums;
     }
 
     public OrmColumn findAuto() {

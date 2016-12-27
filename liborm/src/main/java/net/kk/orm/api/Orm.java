@@ -113,7 +113,7 @@ public class Orm {
         //触发外键删除
         ContentValues contentValues = new ContentValues();
         table.write(this, object, contentValues, SQLiteOpera.DELETE, null);
-        WhereBuilder<T> whereBuilder = new WhereBuilder<>(this, table).only(object);
+        WhereBuilder<T> whereBuilder = new WhereBuilder<>(this, table).onlyOrAll(object);
         return delete(table.getType(), whereBuilder);
     }
 
