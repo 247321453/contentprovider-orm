@@ -49,12 +49,18 @@ public class OrmSelector<T> {
 //        return this;
 //    }
     public T findById(Object t) {
+        if (t == null) return null;
         List<OrmColumn> columns = mTable.getKeyColumns();
         if (columns == null || columns.size() == 0) {
             return null;
         }
         if (columns.size() == 1) {
-            return where(columns.get(0).getColumnName(), "=", t).findFirst();
+            OrmColumn column = columns.get(0);
+            if (mTable.getType().equals(t.getClass())) {
+                //就是bean，得获取id的值
+                return where(column.getColumnName(), "=", column.getValue(t)).findFirst();
+            }
+            return where(column.getColumnName(), "=", t).findFirst();
         } else {
             createWhere();
             for (OrmColumn column : columns) {
@@ -63,6 +69,7 @@ public class OrmSelector<T> {
             return findFirst();
         }
     }
+
     private void createWhere() {
         if (this.whereBuilder == null) {
             this.whereBuilder = new WhereBuilder<>(orm, mTable);
