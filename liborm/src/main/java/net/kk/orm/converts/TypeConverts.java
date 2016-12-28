@@ -9,6 +9,7 @@ import net.kk.orm.enums.SQLiteType;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class TypeConverts {
@@ -25,6 +26,17 @@ public class TypeConverts {
         register(Integer.class, new SameConvert<>(Integer.class, SQLiteType.INTEGER));
         register(Long.class, new SameConvert<>(Long.class, SQLiteType.LONG));
         register(String.class, new SameConvert<>(String.class, SQLiteType.TEXT));
+
+        register(Integer[].class, new ArraysIntegerConvert());
+        register(Long[].class, new ArraysLongConvert());
+        register(Float[].class, new ArraysFloatConvert());
+        register(Double[].class, new ArraysDoubleConvert());
+        register(String[].class, new ArraysStringConvert());
+
+        register(int[].class, new IntsConvert());
+        register(long[].class, new LongsConvert());
+        register(float[].class, new FloatsConvert());
+        register(double[].class, new DoublesConvert());
     }
 
     public static TypeConverts get() {
@@ -92,6 +104,7 @@ public class TypeConverts {
             } else if (void.class == type) {
                 return Void.class;
             }
+
         }
         return type;
     }
