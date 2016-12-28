@@ -198,11 +198,7 @@ public class OrmTable<T> extends IOrmBase {
             }
             builder.append(",");
         } else {
-            int kindex = 0;
             for (OrmColumn column : mkeyColums) {
-                if (kindex > 0) {
-                    builder.append(",");
-                }
                 builder.append(column.getColumnName());
                 builder.append(" ");
                 builder.append(column.getColumnType());
@@ -211,7 +207,7 @@ public class OrmTable<T> extends IOrmBase {
                             .append(" ")
                             .append(column.getDefaultValue());
                 }
-                kindex++;
+                builder.append(",");
             }
         }
         int builders = 0;

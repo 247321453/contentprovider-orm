@@ -14,7 +14,7 @@ public class WhereBuilder<T> {
     private int mOPs = 0;
     private Orm mOrm;
 
-    private WhereBuilder(Orm orm) {
+    WhereBuilder(Orm orm) {
         this.mOrm = orm;
         whereItems = new ArrayList<>();
         mStringBuilder = new StringBuilder();
@@ -55,7 +55,7 @@ public class WhereBuilder<T> {
         }
         return this;
     }
-    private WhereBuilder<T> op(WhereBuilder whereBuilder, boolean isAnd) {
+    WhereBuilder<T> op(WhereBuilder whereBuilder, boolean isAnd) {
         if (whereBuilder.mOPs > 0) {
             if (mOPs > 0) {
                 if (isAnd) {

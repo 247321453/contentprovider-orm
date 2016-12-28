@@ -42,40 +42,45 @@ public class OrmSelector<T> {
     public OrmSelector<T> orderBy(String name) {
         return orderBy(name, false);
     }
-//
+
+    //
 //    public OrmSelector<T> where(WhereBuilder whereBuilder) {
 //        this.whereBuilder = whereBuilder;
 //        return this;
 //    }
+    public T findById(Object t) {
+        List<OrmColumn> columns = mTable.getKeyColumns();
+        if (columns == null || columns.size() == 0) {
+            return null;
+        }
+        if (columns.size() == 1) {
+            return where(columns.get(0).getColumnName(), "=", t).findFirst();
+        } else {
+            createWhere();
+            for (OrmColumn column : columns) {
+                whereBuilder.op(column, "=", column.getValue(t), true);
+            }
+            return findFirst();
+        }
+    }
+    private void createWhere() {
+        if (this.whereBuilder == null) {
+            this.whereBuilder = new WhereBuilder<>(orm, mTable);
+        }
+    }
 
     public OrmSelector<T> where(String columnName, String op, Object value) {
         return and(columnName, op, value);
     }
 
-    public T findById(Object id) {
-        OrmColumn col = mTable.findKey();
-        if (col == null) {
-            return null;
-        }
-        if (this.whereBuilder == null) {
-            this.whereBuilder = new WhereBuilder<>(orm, mTable);
-        }
-        this.whereBuilder.op(col, "=", id, true);
-        return findFirst();
-    }
-
     public OrmSelector<T> and(String columnName, String op, Object value) {
-        if (this.whereBuilder == null) {
-            this.whereBuilder = new WhereBuilder<>(orm, mTable);
-        }
+        createWhere();
         whereBuilder.and(columnName, op, value);
         return this;
     }
 
     public OrmSelector<T> in(String columnName, List<T> values) {
-        if (this.whereBuilder == null) {
-            this.whereBuilder = new WhereBuilder<>(orm, mTable);
-        }
+        createWhere();
         whereBuilder.in(columnName, values);
         return this;
     }
@@ -89,9 +94,7 @@ public class OrmSelector<T> {
     }
 
     public OrmSelector<T> or(String columnName, String op, Object value) {
-        if (this.whereBuilder == null) {
-            this.whereBuilder = new WhereBuilder<>(orm, mTable);
-        }
+        createWhere();
         whereBuilder.or(columnName, op, value);
         return this;
     }
@@ -183,13 +186,13 @@ public class OrmSelector<T> {
         return exstring.toString();
     }
 
-    private Cursor queryAll(boolean sort,String[] cols) {
+    private Cursor queryAll(boolean sort, String[] cols) {
         try {
             if (whereBuilder != null) {
                 return helper.query(mTable.getTableUri(), cols, whereBuilder.getWhereString(),
                         whereBuilder.getWhereItems(), getSortString());
             }
-            return helper.query(mTable.getTableUri(), cols, null, null, sort?getSortString():null);
+            return helper.query(mTable.getTableUri(), cols, null, null, sort ? getSortString() : null);
         } catch (Exception e) {
             Log.e(Orm.TAG, "query", e);
             return null;
