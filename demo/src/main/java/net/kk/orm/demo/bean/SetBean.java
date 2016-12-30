@@ -17,6 +17,7 @@ public class SetBean {
     private int[] users;
     @Column(Datas.Set.STUB)
     private StubBean mStubBean;
+
     //第一次MyContentProvider改为1
     @Column(value = "testAdd" ,defaultValue = "hello")
     private String testAdd;
@@ -68,6 +69,8 @@ public class SetBean {
                 ", name='" + name + '\'' +
                 ", users=" + Arrays.toString(users) +
                 ", mStubBean=" + mStubBean +
+                ", testAdd='" + testAdd + '\'' +
+                ", testAdd2=" + testAdd2 +
                 '}';
     }
 }

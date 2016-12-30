@@ -2,6 +2,7 @@ package net.kk.orm.api;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.os.Build;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -226,7 +227,20 @@ class OrmColumn extends IOrmBase {
     }
 
     public Object read(Orm orm, Cursor cursor) {
-        int index = cursor.getColumnIndex(getColumnNameOrg());
+        int index = -1;
+        try {
+            if (Build.VERSION.SDK_INT <= 17) {
+                index = cursor.getColumnIndex(SQLiteUtils.removeTable(getColumnNameOrg()));
+            } else {
+                index = cursor.getColumnIndex(getColumnNameOrg());
+            }
+        } catch (Throwable e) {
+            if (Build.VERSION.SDK_INT > 17) {
+                index = cursor.getColumnIndex(SQLiteUtils.removeTable(getColumnNameOrg()));
+            } else {
+                index = cursor.getColumnIndex(getColumnNameOrg());
+            }
+        }
         if (index < 0) {
             if (Orm.DEBUG) {
                 Log.w(Orm.TAG, "no find column " + getColumnNameOrg());

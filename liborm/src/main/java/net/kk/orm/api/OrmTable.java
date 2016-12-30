@@ -377,14 +377,14 @@ public class OrmTable<T> extends IOrmBase {
                 }
             }
         }
-        if (fields != null) {
-            fields = cls.getFields();
-            for (Field f : fields) {
-                if (enableField(f)) {
-                    addField(f);
-                }
-            }
-        }
+//        if (fields != null) {
+//            fields = cls.getFields();
+//            for (Field f : fields) {
+//                if (enableField(f)) {
+//                    addField(f);
+//                }
+//            }
+//        }
         Class<?> sup = cls.getSuperclass();
         if (sup != null && sup != Object.class) {
             findAllFields(sup);
