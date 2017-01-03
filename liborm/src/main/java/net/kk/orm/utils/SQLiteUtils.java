@@ -30,6 +30,15 @@ public class SQLiteUtils {
         return result;
     }
 
+    public static String removeTable(String col) {
+        if (col == null) return null;
+        int i = col.indexOf(".");
+        if (i >= 0) {
+            col = col.substring(i + 1);
+        }
+        return col;
+    }
+
     public static String mask(String name) {
         String chkname = name.toLowerCase(Locale.US);
         if (name.startsWith("\"") && name.endsWith("\"")) {

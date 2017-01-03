@@ -125,6 +125,7 @@ public class OrmSelector<T> {
         T t = null;
         Cursor cursor = queryAll(true, mTable.getAllColumns());
         if (cursor != null) {
+//            Log.w(Orm.TAG, "find "+ Arrays.toString(cursor.getColumnNames()));
             if (cursor.moveToFirst()) {
                 t = mTable.read(orm, cursor);
             }
@@ -136,7 +137,8 @@ public class OrmSelector<T> {
     public List<T> findAll() {
         Cursor cursor = queryAll(true, mTable.getAllColumns());
         if (cursor != null) {
-            List<T> list = new ArrayList<T>();
+            List<T> list = new ArrayList<>();
+//            Log.w(Orm.TAG, "find "+ Arrays.toString(cursor.getColumnNames()));
             if (cursor.moveToFirst()) {
                 do {
                     T t = mTable.read(orm, cursor);
