@@ -166,7 +166,13 @@ public class WhereBuilder<T> {
         if(mOPs==0)return null;
         String[] items = new String[whereItems.size()];
         for (int i = 0; i < items.length; i++) {
-            items[i] = String.valueOf(whereItems.get(i));
+            Object o = whereItems.get(i);
+            if(o instanceof ColumnValue){
+                items[i] = ((ColumnValue) o).getName();
+            }else{
+                items[i] = String.valueOf(o);
+            }
+
         }
         return items;
     }
@@ -178,6 +184,16 @@ public class WhereBuilder<T> {
             return "=";
         }
         return op;
+    }
+    private static class ColumnValue{
+        private String name;
+        public ColumnValue(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
     }
 
 }
