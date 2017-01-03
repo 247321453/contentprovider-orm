@@ -39,15 +39,16 @@ public class WhereBuilder<T> {
         }
         return this;
     }
+
     public WhereBuilder<T> onlyOrAll(T t) {
         List<OrmColumn> columns = mTable.getKeyColumns();
         if (columns != null) {
             for (OrmColumn column : columns) {
                 op(column, "=", column.getValue(t), true);
             }
-        }else{
+        } else {
             columns = mTable.getNoralColums();
-            if(columns!=null){
+            if (columns != null) {
                 for (OrmColumn column : columns) {
                     op(column, "=", column.getValue(t), true);
                 }
@@ -55,6 +56,7 @@ public class WhereBuilder<T> {
         }
         return this;
     }
+
     WhereBuilder<T> op(WhereBuilder whereBuilder, boolean isAnd) {
         if (whereBuilder.mOPs > 0) {
             if (mOPs > 0) {
@@ -93,9 +95,15 @@ public class WhereBuilder<T> {
         mStringBuilder.append(column.getColumnName());
         mStringBuilder.append(" ");
         mStringBuilder.append(wrapper(op));
-        mStringBuilder.append(" ? ");
-        mOPs++;
-        this.whereItems.add(column.toDbValue(mOrm, value, SQLiteOpera.QUERY));
+        if(value instanceof  ColumnValue){
+            mStringBuilder.append(" ");
+            mStringBuilder.append(mask(((ColumnValue)value).getName()));
+            mStringBuilder.append(" ");
+        }else {
+            mStringBuilder.append(" ? ");
+            mOPs++;
+            this.whereItems.add(column.toDbValue(mOrm, value, SQLiteOpera.QUERY));
+        }
         return this;
     }
 
@@ -158,20 +166,16 @@ public class WhereBuilder<T> {
     }
 
     public String getWhereString() {
-        if(mOPs==0)return null;
+        if (mOPs == 0) return null;
         return mStringBuilder.toString();
     }
 
     public String[] getWhereItems() {
-        if(mOPs==0)return null;
+        if (mOPs == 0) return null;
         String[] items = new String[whereItems.size()];
         for (int i = 0; i < items.length; i++) {
             Object o = whereItems.get(i);
-            if(o instanceof ColumnValue){
-                items[i] = ((ColumnValue) o).getName();
-            }else{
-                items[i] = String.valueOf(o);
-            }
+            items[i] = String.valueOf(o);
 
         }
         return items;
@@ -185,8 +189,10 @@ public class WhereBuilder<T> {
         }
         return op;
     }
-    private static class ColumnValue{
+
+    public static class ColumnValue {
         private String name;
+
         public ColumnValue(String name) {
             this.name = name;
         }
