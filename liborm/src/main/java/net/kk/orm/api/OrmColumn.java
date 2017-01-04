@@ -10,6 +10,7 @@ import net.kk.orm.annotations.Column;
 import net.kk.orm.converts.IConvert;
 import net.kk.orm.converts.JsonTextConvert;
 import net.kk.orm.converts.TypeConverts;
+import net.kk.orm.enums.SQLiteOpera;
 import net.kk.orm.enums.SQLiteType;
 import net.kk.orm.utils.SQLiteUtils;
 
@@ -60,7 +61,7 @@ class OrmColumn extends IOrmBase {
         String col = null;
         OrmTable<?> tOrmTable = Orm.table(type);
         OrmColumn ormColumn = null;
-        if (TextUtils.isEmpty(column.unionName())) {
+        if (TextUtils.isEmpty(column.unionKey())) {
             ormColumn = tOrmTable.findKey();
             if (ormColumn != null) {
                 col = ormColumn.getColumnName();
@@ -106,12 +107,12 @@ class OrmColumn extends IOrmBase {
         return mConvert.getSQLiteType();
     }
 
-    public boolean isAutoIncrement() {
-        return mColumn.autoIncrement();
+    public boolean isReadOnly() {
+        return mColumn.unionReadOnly();
     }
 
-    public boolean isEvent(int opera) {
-        return (opera & mColumn.eventFlags()) == opera;
+    public boolean isAutoIncrement() {
+        return mColumn.autoIncrement();
     }
 
     @Override
@@ -161,7 +162,7 @@ class OrmColumn extends IOrmBase {
         return mColumn.value();
     }
 
-    public Object toDbValue(Orm orm, Object val, int opera) {
+    public Object toDbValue(Orm orm, Object val, SQLiteOpera opera) {
         if (val != null) {
             try {
                 IConvert iConvert = mConvert;
@@ -178,7 +179,7 @@ class OrmColumn extends IOrmBase {
         return val;
     }
 
-    public Object getDbValueByParent(Orm orm, Object parent, int opera) {
+    public Object getDbValueByParent(Orm orm, Object parent, SQLiteOpera opera) {
         Object val = null;
         try {
             val = mField.get(parent);
@@ -196,7 +197,7 @@ class OrmColumn extends IOrmBase {
         return val;
     }
 
-    public void write(Orm orm, Object parent, ContentValues contentValues, int opera) {
+    public void write(Orm orm, Object parent, ContentValues contentValues, SQLiteOpera opera) {
         final SQLiteType type = getSQLiteType();
         final Object val = getDbValueByParent(orm, parent, opera);
         final String name = getColumnNameOrg();

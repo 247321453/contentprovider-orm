@@ -4,6 +4,7 @@ package net.kk.orm.demo.sec;
 import net.kk.orm.api.Orm;
 import net.kk.orm.converts.CustomConvert;
 import net.kk.orm.demo.crypto.DESUtils;
+import net.kk.orm.enums.SQLiteOpera;
 
 public class SecConvert extends CustomConvert<String> {
     private final String TAG = "StringConvert";
@@ -19,7 +20,7 @@ public class SecConvert extends CustomConvert<String> {
     }
 
     @Override
-    public String toDbValue(Orm orm, String value,int opera) {
+    public String toDbValue(Orm orm, String value,SQLiteOpera opera) {
         //加密
         return DESUtils.encrypt(value, TAG);
     }

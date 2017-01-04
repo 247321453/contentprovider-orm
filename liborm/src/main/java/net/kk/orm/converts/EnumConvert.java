@@ -4,6 +4,7 @@ package net.kk.orm.converts;
 import android.text.TextUtils;
 
 import net.kk.orm.api.Orm;
+import net.kk.orm.enums.SQLiteOpera;
 import net.kk.orm.enums.SQLiteType;
 
 import java.lang.reflect.Method;
@@ -44,7 +45,7 @@ class EnumConvert<T> implements IConvert<String, Object> {
     }
 
     @Override
-    public String toDbValue(Orm orm, Object value, int opera) {
+    public String toDbValue(Orm orm, Object value, SQLiteOpera opera) {
         return String.valueOf(value);
     }
 }

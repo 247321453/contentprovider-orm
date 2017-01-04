@@ -2,6 +2,7 @@ package net.kk.orm.converts;
 
 
 import net.kk.orm.api.Orm;
+import net.kk.orm.enums.SQLiteOpera;
 import net.kk.orm.enums.SQLiteType;
 
 class DoublesConvert implements IConvert<String, double[]> {
@@ -23,7 +24,7 @@ class DoublesConvert implements IConvert<String, double[]> {
     }
 
     @Override
-    public String toDbValue(Orm orm, double[] value, int opera) {
+    public String toDbValue(Orm orm, double[] value, SQLiteOpera opera) {
         if (value == null) {
             return null;
         }

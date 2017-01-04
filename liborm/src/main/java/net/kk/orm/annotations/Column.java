@@ -1,7 +1,6 @@
 package net.kk.orm.annotations;
 
 
-import net.kk.orm.enums.SQLiteOpera;
 import net.kk.orm.converts.IConvert;
 
 import java.lang.annotation.ElementType;
@@ -26,12 +25,12 @@ public @interface Column {
     /***
      * 联合的自定义字段，默认是表的keyId
      */
-    String unionName() default "";
+    String unionKey() default "";
 
     /***
      * 用于外键触发处理
      */
-    int eventFlags() default (SQLiteOpera.INSERT | SQLiteOpera.DELETE | SQLiteOpera.UPDATE);
+    boolean unionReadOnly() default false;
 
     /***
      * 自定义转换

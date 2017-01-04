@@ -21,7 +21,7 @@ final class DefaultColumn implements Column {
     }
 
     @Override
-    public String unionName() {
+    public String unionKey() {
         return null;
     }
 
@@ -41,8 +41,8 @@ final class DefaultColumn implements Column {
     }
 
     @Override
-    public int eventFlags() {
-        return SQLiteOpera.INSERT|SQLiteOpera.UPDATE|SQLiteOpera.DELETE;
+    public boolean unionReadOnly() {
+        return false;
     }
 
     @Override

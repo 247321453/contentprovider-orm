@@ -2,6 +2,7 @@ package net.kk.orm.converts;
 
 
 import net.kk.orm.api.Orm;
+import net.kk.orm.enums.SQLiteOpera;
 import net.kk.orm.enums.SQLiteType;
 
 import java.util.Date;
@@ -25,7 +26,7 @@ class DateConvert implements IConvert<Long, Date> {
     }
 
     @Override
-    public Long toDbValue(Orm orm,Date value,int opera) {
+    public Long toDbValue(Orm orm,Date value,SQLiteOpera opera) {
         return value.getTime();
     }
 }

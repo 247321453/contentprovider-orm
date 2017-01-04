@@ -29,15 +29,15 @@ class UniconKeyConvert<D, T> implements IConvert<D, T> {
     }
 
     @Override
-    public D toDbValue(Orm orm, T value, int opera) {
+    public D toDbValue(Orm orm, T value, SQLiteOpera opera) {
         Object id = column.getValue(value);
-        if (column.isEvent(opera)) {
+        if (!column.isReadOnly()) {
             try {
-                if ((opera & SQLiteOpera.INSERT) == SQLiteOpera.INSERT) {
+                if (opera == SQLiteOpera.INSERT) {
                     orm.insert(value);
-                } else if ((opera & SQLiteOpera.UPDATE) == SQLiteOpera.UPDATE) {
+                } else if (opera == SQLiteOpera.UPDATE) {
                     orm.update(value);
-                } else if ((opera & SQLiteOpera.DELETE) == SQLiteOpera.DELETE) {
+                } else if (opera == SQLiteOpera.DELETE) {
                     orm.delete(value);
                 }
             } catch (Exception e) {

@@ -2,6 +2,7 @@ package net.kk.orm.converts;
 
 
 import net.kk.orm.api.Orm;
+import net.kk.orm.enums.SQLiteOpera;
 import net.kk.orm.enums.SQLiteType;
 
 class BooleanConvert implements IConvert<Integer, Boolean> {
@@ -20,7 +21,7 @@ class BooleanConvert implements IConvert<Integer, Boolean> {
     }
 
     @Override
-    public Integer toDbValue(Orm orm,Boolean value,int opera) {
+    public Integer toDbValue(Orm orm,Boolean value,SQLiteOpera opera) {
         return value == Boolean.TRUE ? 1 : 0;
     }
 }
