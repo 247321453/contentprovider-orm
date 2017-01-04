@@ -1,6 +1,8 @@
 package net.kk.orm.demo.bean;
 
 import net.kk.orm.annotations.Column;
+import net.kk.orm.annotations.ColumnConvert;
+import net.kk.orm.annotations.PrimaryKey;
 import net.kk.orm.annotations.Table;
 import net.kk.orm.demo.db.Datas;
 import net.kk.orm.demo.sec.SecConvert;
@@ -9,9 +11,11 @@ import java.util.Arrays;
 
 @Table(name = Datas.Set.TABLE, uri = Datas.Set.CONTENT_URI_STRING)
 public class SetBean {
-    @Column(value = Datas.Set.ID, autoIncrement = true, primaryKey = true)
+    @PrimaryKey(autoIncrement = true)
+    @Column(Datas.Set.ID)
     private long id;
-    @Column(value = Datas.Set.NAME,convert = SecConvert.class)
+    @ColumnConvert(SecConvert.class)
+    @Column(value = Datas.Set.NAME)
     private String name;
     @Column(Datas.Set.USERS)
     private int[] users;
@@ -19,10 +23,11 @@ public class SetBean {
     private StubBean mStubBean;
 
     //第一次MyContentProvider改为1
-    @Column(value = "testAdd" ,defaultValue = "hello")
+    @Column(value = "testAdd", defaultValue = "hello")
     private String testAdd;
-    @Column(value = "testAdd2" ,defaultValue = "1")
+    @Column(value = "testAdd2", defaultValue = "1")
     private int testAdd2;
+
     public long getId() {
         return id;
     }

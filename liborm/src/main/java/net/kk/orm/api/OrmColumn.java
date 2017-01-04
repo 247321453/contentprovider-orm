@@ -7,6 +7,10 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import net.kk.orm.annotations.Column;
+import net.kk.orm.annotations.ColumnConvert;
+import net.kk.orm.annotations.ForeignKey;
+import net.kk.orm.annotations.PrimaryKey;
+import net.kk.orm.annotations.Union;
 import net.kk.orm.converts.IConvert;
 import net.kk.orm.converts.JsonTextConvert;
 import net.kk.orm.converts.TypeConverts;
@@ -21,6 +25,9 @@ import java.lang.reflect.Field;
  */
 class OrmColumn extends IOrmBase {
     private Column mColumn;
+    private Union mUnion;
+    private PrimaryKey mPrimaryKey;
+    private ForeignKey mForeignKey;
     private Field mField;
     private final Class<?> pClass;
     private final Class<?> mRClass;
@@ -36,17 +43,21 @@ class OrmColumn extends IOrmBase {
         if (mColumn == null) {
             mColumn = new DefaultColumn(field);
         }
-        if (mColumn.convert().equals(IConvert.class)) {
+        mUnion = field.getAnnotation(Union.class);
+        mPrimaryKey = field.getAnnotation(PrimaryKey.class);
+        mForeignKey = field.getAnnotation(ForeignKey.class);
+        ColumnConvert columnConvert = field.getAnnotation(ColumnConvert.class);
+        if (columnConvert == null || columnConvert.value().equals(IConvert.class)) {
             mConvert = TypeConverts.get().find(mRClass, mColumn);
             if (mConvert == null) {
                 mConvert = createUniconKeyConvert(mRClass, mColumn);
             }
         } else {
             try {
-                mConvert = mColumn.convert().newInstance();
+                mConvert = columnConvert.value().newInstance();
             } catch (Exception e) {
                 if (Orm.DEBUG) {
-                    Log.w(Orm.TAG, "create convert " + mColumn.convert());
+                    Log.w(Orm.TAG, "create convert " + columnConvert.value());
                 }
             }
         }
@@ -61,7 +72,7 @@ class OrmColumn extends IOrmBase {
         String col = null;
         OrmTable<?> tOrmTable = Orm.table(type);
         OrmColumn ormColumn = null;
-        if (TextUtils.isEmpty(column.unionKey())) {
+        if (mUnion == null || TextUtils.isEmpty(mUnion.key())) {
             ormColumn = tOrmTable.findKey();
             if (ormColumn != null) {
                 col = ormColumn.getColumnName();
@@ -108,11 +119,11 @@ class OrmColumn extends IOrmBase {
     }
 
     public boolean isReadOnly() {
-        return mColumn.unionReadOnly();
+        return mUnion != null && mUnion.readOnly();
     }
 
     public boolean isAutoIncrement() {
-        return mColumn.autoIncrement();
+        return mPrimaryKey != null && mPrimaryKey.autoIncrement();
     }
 
     @Override
@@ -145,7 +156,7 @@ class OrmColumn extends IOrmBase {
     }
 
     public boolean isPrimaryKey() {
-        return mColumn.primaryKey() || mColumn.autoIncrement();
+        return mPrimaryKey != null;
     }
 
     public String getColumnName() {
@@ -153,6 +164,18 @@ class OrmColumn extends IOrmBase {
             mColumnName = SQLiteUtils.mask(getColumnNameOrg());
         }
         return mColumnName;
+    }
+
+    public boolean hasForeignKey() {
+        return mForeignKey != null;
+    }
+
+    public String getForeignKey() {
+        return mForeignKey != null ? mForeignKey.key() : null;
+    }
+
+    public String getForeignTable() {
+        return mForeignKey != null ? mForeignKey.table() : null;
     }
 
     public String getColumnNameOrg() {

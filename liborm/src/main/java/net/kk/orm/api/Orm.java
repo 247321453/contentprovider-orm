@@ -22,7 +22,7 @@ public class Orm {
     private IContentResolver helper;
     private static Map<Class<?>, OrmTable<?>> sOrmTableHashMap = new HashMap<>();
     private static IOjectConvert sIJsonConvert;
-
+    public static final boolean SUPPORT_FOREIGN_KEY = false;
     @SuppressWarnings("unchecked")
     public static <T> OrmTable<T> table(Class<T> pClass) {
         final Class<?> key = TypeConverts.wrapper(pClass);

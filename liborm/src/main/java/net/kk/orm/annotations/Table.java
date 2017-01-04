@@ -10,8 +10,11 @@ import java.lang.annotation.Target;
 public @interface Table {
     String name();
 
-    boolean onlyRead() default false;
+    boolean readOnly() default false;
 
+    /**
+     * 类型名字
+     */
     String typeName() default "";
 
     String createSql() default "";

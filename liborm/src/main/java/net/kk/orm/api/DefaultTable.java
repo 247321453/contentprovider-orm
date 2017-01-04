@@ -27,7 +27,7 @@ final class DefaultTable implements Table {
     }
 
     @Override
-    public boolean onlyRead() {
+    public boolean readOnly() {
         return false;
     }
 

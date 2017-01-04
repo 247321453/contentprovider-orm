@@ -1,11 +1,13 @@
 package net.kk.orm.demo.game;
 
 import net.kk.orm.annotations.Column;
+import net.kk.orm.annotations.PrimaryKey;
 import net.kk.orm.annotations.Table;
 
 @Table(name = OrmCard.Text.TABLE, uri = OrmCard.Text.CONTENT_URI_STRING)
 public class CardText {
-    @Column(value = OrmCard.Text.ID, primaryKey = true)
+    @PrimaryKey
+    @Column(value = OrmCard.Text.ID)
     private long code;
     @Column(OrmCard.Text.NAME)
     private String name;

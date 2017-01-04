@@ -1,12 +1,14 @@
 package net.kk.orm.demo.bean;
 
 import net.kk.orm.annotations.Column;
+import net.kk.orm.annotations.PrimaryKey;
 import net.kk.orm.annotations.Table;
 import net.kk.orm.demo.db.Datas;
 
 @Table(name = Datas.Stub.TABLE, uri = Datas.Stub.CONTENT_URI_STRING)
 public class StubBean {
-    @Column(value = Datas.Stub.NAME, primaryKey = true)
+    @PrimaryKey
+    @Column(value = Datas.Stub.NAME)
     private String name;
     @Column(value = Datas.Stub.ADDRESS,defaultValue = "n't address")
     private String address;

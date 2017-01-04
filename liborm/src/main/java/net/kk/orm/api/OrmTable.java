@@ -159,7 +159,7 @@ public class OrmTable<T> extends IOrmBase {
     }
 
     public boolean isOnlyRead() {
-        return mTable.onlyRead() || getTableName().contains("join");
+        return mTable.readOnly() || getTableName().contains("join");
     }
 
     public void onCreate(SQLiteDatabase db) {
@@ -239,6 +239,20 @@ public class OrmTable<T> extends IOrmBase {
             builder.append(")");
         }
         builder.append(") ");
+        if(Orm.SUPPORT_FOREIGN_KEY) {
+            //FOREIGN KEY(trackartist) REFERENCES artist(artistid)
+            for (OrmColumn column : mkeyColums) {
+                if (column.hasForeignKey()) {
+                    builder.append(",FOREIGN KEY(");
+                    builder.append(column.getColumnName());
+                    builder.append(") REFERENCES ");
+                    builder.append(column.getForeignTable());
+                    builder.append("(");
+                    builder.append(column.getForeignKey());
+                    builder.append(") ");
+                }
+            }
+        }
         builder.append(mTable.createSql());
         builder.append(";");
         String sql = builder.toString();

@@ -1,12 +1,14 @@
 package net.kk.orm.demo.game;
 
 import net.kk.orm.annotations.Column;
+import net.kk.orm.annotations.PrimaryKey;
 import net.kk.orm.annotations.Table;
 
-@Table(name = OrmCard.Cards.TABLE, uri = OrmCard.Cards.CONTENT_URI_STRING, onlyRead = true)
+@Table(name = OrmCard.Cards.TABLE, uri = OrmCard.Cards.CONTENT_URI_STRING, readOnly = true)
 public class Card extends CardData {
     //code必须和CardData的code一样，才能覆盖sql字段
-    @Column(value = OrmCard.Cards.ID, primaryKey = true)
+    @PrimaryKey
+    @Column(OrmCard.Cards.ID)
     private long code;
     @Column(OrmCard.Text.NAME)
     private String name;

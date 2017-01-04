@@ -21,33 +21,8 @@ final class DefaultColumn implements Column {
     }
 
     @Override
-    public String unionKey() {
-        return null;
-    }
-
-    @Override
-    public boolean primaryKey() {
-        return false;
-    }
-
-    @Override
-    public boolean autoIncrement() {
-        return false;
-    }
-
-    @Override
     public String defaultValue() {
         return null;
-    }
-
-    @Override
-    public boolean unionReadOnly() {
-        return false;
-    }
-
-    @Override
-    public Class<? extends IConvert> convert() {
-        return IConvert.class;
     }
 
     @Override
