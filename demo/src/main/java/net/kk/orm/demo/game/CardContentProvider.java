@@ -3,10 +3,10 @@ package net.kk.orm.demo.game;
 import android.content.Context;
 import android.util.Log;
 
-import net.kk.orm.api.Orm;
-import net.kk.orm.api.providers.OrmContentProvider;
-import net.kk.orm.api.providers.OrmSQLiteOpenHelper;
-import net.kk.orm.api.providers.SimpleOrmSQLiteHelper;
+import net.kk.orm.Orm;
+import net.kk.orm.providers.OrmContentProvider;
+import net.kk.orm.providers.OrmSQLiteOpenHelper;
+import net.kk.orm.providers.SimpleOrmSQLiteHelper;
 
 import java.io.File;
 import java.io.FileOutputStream;

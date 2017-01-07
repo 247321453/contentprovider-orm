@@ -1,4 +1,4 @@
-package net.kk.orm.api;
+package net.kk.orm;
 
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -8,7 +8,6 @@ import android.util.Log;
 
 import net.kk.orm.annotations.Column;
 import net.kk.orm.annotations.ColumnConvert;
-import net.kk.orm.annotations.ForeignKey;
 import net.kk.orm.annotations.PrimaryKey;
 import net.kk.orm.annotations.Union;
 import net.kk.orm.converts.IConvert;

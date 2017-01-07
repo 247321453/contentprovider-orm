@@ -4,7 +4,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import net.kk.orm.api.Orm;
+import net.kk.orm.Orm;
 
 import java.util.Locale;
 

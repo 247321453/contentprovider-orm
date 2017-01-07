@@ -5,7 +5,7 @@ import android.app.Application;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import net.kk.orm.api.Orm;
+import net.kk.orm.Orm;
 import net.kk.orm.converts.IOjectConvert;
 
 public class App extends Application {

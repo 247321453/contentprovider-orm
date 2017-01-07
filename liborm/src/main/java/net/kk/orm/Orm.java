@@ -1,4 +1,4 @@
-package net.kk.orm.api;
+package net.kk.orm;
 
 import android.content.ContentUris;
 import android.content.ContentValues;

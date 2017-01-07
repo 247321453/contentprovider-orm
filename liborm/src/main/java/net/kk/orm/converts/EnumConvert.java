@@ -3,7 +3,7 @@ package net.kk.orm.converts;
 
 import android.text.TextUtils;
 
-import net.kk.orm.api.Orm;
+import net.kk.orm.Orm;
 import net.kk.orm.enums.SQLiteOpera;
 import net.kk.orm.enums.SQLiteType;
 

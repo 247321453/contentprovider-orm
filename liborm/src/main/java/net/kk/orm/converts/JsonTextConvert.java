@@ -1,6 +1,6 @@
 package net.kk.orm.converts;
 
-import net.kk.orm.api.Orm;
+import net.kk.orm.Orm;
 import net.kk.orm.enums.SQLiteOpera;
 
 public class JsonTextConvert<T> extends CustomConvert<T> {

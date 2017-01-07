@@ -4,12 +4,11 @@ package net.kk.orm.converts;
 import android.util.Log;
 
 import net.kk.orm.annotations.Column;
-import net.kk.orm.api.Orm;
+import net.kk.orm.Orm;
 import net.kk.orm.enums.SQLiteType;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class TypeConverts {
