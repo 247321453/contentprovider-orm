@@ -27,7 +27,6 @@ class OrmColumn extends IOrmBase {
     private Column mColumn;
     private Union mUnion;
     private PrimaryKey mPrimaryKey;
-    private ForeignKey mForeignKey;
     private Field mField;
     private final Class<?> pClass;
     private final Class<?> mRClass;
@@ -45,7 +44,6 @@ class OrmColumn extends IOrmBase {
         }
         mUnion = field.getAnnotation(Union.class);
         mPrimaryKey = field.getAnnotation(PrimaryKey.class);
-        mForeignKey = field.getAnnotation(ForeignKey.class);
         ColumnConvert columnConvert = field.getAnnotation(ColumnConvert.class);
         if (columnConvert == null || columnConvert.value().equals(IConvert.class)) {
             mConvert = TypeConverts.get().find(mRClass, mColumn);
@@ -135,11 +133,15 @@ class OrmColumn extends IOrmBase {
                 '}';
     }
 
+    public boolean hasDefaultValue(){
+        return !"___NULL".equals(mColumn.defaultValue());
+    }
+
     public String getDefaultValue() {
         if (TextUtils.isEmpty(mDefaultText)) {
             mDefaultText = mColumn.defaultValue();
-            if (mDefaultText == null || "___NULL".equals(mDefaultText)) {
-                mDefaultText = "";
+            if ("___NULL".equals(mDefaultText)|| mDefaultText == null) {
+                mDefaultText = "null";
             } else if (getSQLiteType() == SQLiteType.TEXT) {
                 if (mDefaultText.startsWith("'") && mDefaultText.endsWith("'")) {
 
@@ -164,18 +166,6 @@ class OrmColumn extends IOrmBase {
             mColumnName = SQLiteUtils.mask(getColumnNameOrg());
         }
         return mColumnName;
-    }
-
-    public boolean hasForeignKey() {
-        return mForeignKey != null;
-    }
-
-    public String getForeignKey() {
-        return mForeignKey != null ? mForeignKey.key() : null;
-    }
-
-    public String getForeignTable() {
-        return mForeignKey != null ? mForeignKey.table() : null;
     }
 
     public String getColumnNameOrg() {

@@ -191,7 +191,7 @@ public class OrmTable<T> extends IOrmBase {
                         .append(column.getColumnType())
                         .append(" PRIMARY KEY");
             }
-            if (!TextUtils.isEmpty(column.getDefaultValue())) {
+            if (column.hasDefaultValue()) {
                 builder.append(" default ")
                         .append(" ")
                         .append(column.getDefaultValue());
@@ -202,7 +202,7 @@ public class OrmTable<T> extends IOrmBase {
                 builder.append(column.getColumnName());
                 builder.append(" ");
                 builder.append(column.getColumnType());
-                if (!TextUtils.isEmpty(column.getDefaultValue())) {
+                if (column.hasDefaultValue()) {
                     builder.append(" default ")
                             .append(" ")
                             .append(column.getDefaultValue());
@@ -218,7 +218,7 @@ public class OrmTable<T> extends IOrmBase {
             builder.append(column.getColumnName());
             builder.append(" ");
             builder.append(column.getColumnType());
-            if (!TextUtils.isEmpty(column.getDefaultValue())) {
+            if (column.hasDefaultValue()) {
                 builder.append(" default ")
                         .append(" ")
                         .append(column.getDefaultValue());
@@ -239,20 +239,6 @@ public class OrmTable<T> extends IOrmBase {
             builder.append(")");
         }
         builder.append(") ");
-        if(Orm.SUPPORT_FOREIGN_KEY) {
-            //FOREIGN KEY(trackartist) REFERENCES artist(artistid)
-            for (OrmColumn column : mkeyColums) {
-                if (column.hasForeignKey()) {
-                    builder.append(",FOREIGN KEY(");
-                    builder.append(column.getColumnName());
-                    builder.append(") REFERENCES ");
-                    builder.append(column.getForeignTable());
-                    builder.append("(");
-                    builder.append(column.getForeignKey());
-                    builder.append(") ");
-                }
-            }
-        }
         builder.append(mTable.createSql());
         builder.append(";");
         String sql = builder.toString();
@@ -333,7 +319,7 @@ public class OrmTable<T> extends IOrmBase {
                 .append(column.getColumnName())
                 .append(" ")
                 .append(column.getColumnType());
-        if (!TextUtils.isEmpty(column.getDefaultValue())) {
+        if (column.hasDefaultValue()) {
             builder.append(" default ")
                     .append(" ")
                     .append(column.getDefaultValue());

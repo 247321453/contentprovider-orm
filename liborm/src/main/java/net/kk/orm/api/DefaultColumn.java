@@ -22,7 +22,7 @@ final class DefaultColumn implements Column {
 
     @Override
     public String defaultValue() {
-        return null;
+        return "___NULL";
     }
 
     @Override
