@@ -35,6 +35,14 @@ public abstract class OrmContentProvider extends ContentProvider {
         return true;
     }
 
+    protected boolean checkRead(Uri uri) {
+        return true;
+    }
+
+    protected boolean checkWrite(Uri uri) {
+        return true;
+    }
+
     protected String makeType(String table, boolean isId) {
         if (isId) {
             return "vnd.android.cursor.dir/orm.table." + table;
@@ -104,7 +112,7 @@ public abstract class OrmContentProvider extends ContentProvider {
 
     @Override
     public Cursor query(Uri uri, String[] columns, String selection, String[] selectionArgs, String sortOrder) {
-        if (uri == null) return null;
+        if (uri == null || !checkRead(uri)) return null;
         final String table = getTableName(uri);
         if (TextUtils.isEmpty(table)) return null;
         SQLiteDatabase db = mOrmSQLiteOpenHelper.getReadableDatabase();
@@ -137,6 +145,7 @@ public abstract class OrmContentProvider extends ContentProvider {
 
     @Override
     public int bulkInsert(Uri uri, ContentValues[] values) {
+        if (uri == null || !checkWrite(uri)) return 0;
         int numValues = 0;
         SQLiteDatabase db = mOrmSQLiteOpenHelper.getWritableDatabase();
         db.beginTransaction(); //开始事务
@@ -144,7 +153,7 @@ public abstract class OrmContentProvider extends ContentProvider {
             //数据库操作
             numValues = values.length;
             for (int i = 0; i < numValues; i++) {
-                insert(uri, values[i]);
+                insertInner(uri, values[i]);
             }
             db.setTransactionSuccessful(); //别忘了这句 Commit
         } finally {
@@ -153,9 +162,7 @@ public abstract class OrmContentProvider extends ContentProvider {
         return numValues;
     }
 
-    @Override
-    public Uri insert(Uri uri, ContentValues values) {
-        if (uri == null) return null;
+    private Uri insertInner(Uri uri, ContentValues values) {
         final String table = getTableName(uri);
         if (TextUtils.isEmpty(table)) return uri;
         SQLiteDatabase db = mOrmSQLiteOpenHelper.getWritableDatabase();
@@ -173,8 +180,14 @@ public abstract class OrmContentProvider extends ContentProvider {
     }
 
     @Override
+    public Uri insert(Uri uri, ContentValues values) {
+        if (uri == null || !checkWrite(uri)) return null;
+        return insertInner(uri, values);
+    }
+
+    @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
-        if (uri == null) return 0;
+        if (uri == null || checkWrite(uri)) return 0;
         final String table = getTableName(uri);
         if (TextUtils.isEmpty(table)) return 0;
         SQLiteDatabase db = mOrmSQLiteOpenHelper.getWritableDatabase();
@@ -194,7 +207,7 @@ public abstract class OrmContentProvider extends ContentProvider {
 
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-        if (uri == null) return 0;
+        if (uri == null || checkWrite(uri)) return 0;
         final String table = getTableName(uri);
         if (TextUtils.isEmpty(table)) return 0;
         SQLiteDatabase db = mOrmSQLiteOpenHelper.getWritableDatabase();
