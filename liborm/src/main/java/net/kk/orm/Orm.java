@@ -12,8 +12,10 @@ import net.kk.orm.converts.TypeConverts;
 import net.kk.orm.converts.IOjectConvert;
 import net.kk.orm.enums.SQLiteOpera;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Orm {
@@ -22,6 +24,7 @@ public class Orm {
     private IContentResolver helper;
     private static Map<Class<?>, OrmTable<?>> sOrmTableHashMap = new HashMap<>();
     private static IOjectConvert sIJsonConvert;
+
     @SuppressWarnings("unchecked")
     public static <T> OrmTable<T> table(Class<T> pClass) {
         final Class<?> key = TypeConverts.wrapper(pClass);
@@ -179,6 +182,27 @@ public class Orm {
         }
         WhereBuilder<T> whereBuilder = new WhereBuilder<>(this, table).only(object);
         return update(object, whereBuilder, cols);
+    }
+
+    public <T> int insertList(List<T> list) throws Exception {
+        if (list == null || list.size() == 0) return 0;
+        OrmTable<?> table = table(list.get(0).getClass());
+        if (table == null || table.isOnlyRead()) {
+            return 0;
+        }
+        int count = list.size();
+        ContentValues[] values = new ContentValues[count];
+        for (int i = 0; i < count; i++) {
+            T obj = list.get(i);
+            values[i] = new ContentValues();
+            ContentValues contentValues = values[i];
+            table.write(this, obj, contentValues, SQLiteOpera.INSERT, null);
+        }
+        try {
+            helper.insertList(table.getTableUri(), values);
+        } catch (Exception e) {
+        }
+        return 0;
     }
 
     public <T> long insert(T object) throws Exception {

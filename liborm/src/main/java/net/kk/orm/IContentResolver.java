@@ -12,21 +12,26 @@ import android.os.CancellationSignal;
 
 public interface IContentResolver {
     Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,
-                              String sortOrder);
+                 String sortOrder);
+
     Uri insert(Uri url, ContentValues values);
 
     int update(Uri uri, ContentValues values,
-                            String where, String[] selectionArgs);
+               String where, String[] selectionArgs);
+
     Cursor query(final Uri uri, String[] projection,
-                              String selection, String[] selectionArgs,
-                              String sortOrder, CancellationSignal cancellationSignal);
+                 String selection, String[] selectionArgs,
+                 String sortOrder, CancellationSignal cancellationSignal);
+
+    int insertList(Uri url, ContentValues[] values);
 
     int delete(Uri url, String where,
-                            String[] selectionArgs);
-   void unregisterContentObserver(ContentObserver observer);
+               String[] selectionArgs);
+
+    void unregisterContentObserver(ContentObserver observer);
 
     boolean registerContentObserver(Uri uri, boolean notifyForDescendents,
-                                           ContentObserver observer, int userHandle);
+                                    ContentObserver observer, int userHandle);
 //    SQLiteDatabase getReadableDatabase();
 //    SQLiteDatabase getWritableDatabase();
 }

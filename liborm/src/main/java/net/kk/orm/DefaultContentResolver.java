@@ -26,6 +26,11 @@ class DefaultContentResolver implements IContentResolver {
     }
 
     @Override
+    public int insertList(Uri url, ContentValues[] values) {
+        return contentResolver.bulkInsert(url, values);
+    }
+
+    @Override
     public Uri insert(Uri url, ContentValues values) {
         return contentResolver.insert(url, values);
     }

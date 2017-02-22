@@ -91,9 +91,9 @@ public abstract class OrmContentProvider extends ContentProvider {
                 mCacheTableNames.put(key, "");
                 return null;
             }
-            if(table.isOnlyRead()){
+            if (table.isOnlyRead()) {
                 name = table.getTableName();
-            }else {
+            } else {
                 name = mask(table.getTableName());
             }
 //            Log.d("orm", table.getTableName()+" mask "+name);
@@ -133,6 +133,24 @@ public abstract class OrmContentProvider extends ContentProvider {
             cursor.setNotificationUri(getContext().getContentResolver(), uri);
         }
         return cursor;
+    }
+
+    @Override
+    public int bulkInsert(Uri uri, ContentValues[] values) {
+        int numValues = 0;
+        SQLiteDatabase db = mOrmSQLiteOpenHelper.getWritableDatabase();
+        db.beginTransaction(); //开始事务
+        try {
+            //数据库操作
+            numValues = values.length;
+            for (int i = 0; i < numValues; i++) {
+                insert(uri, values[i]);
+            }
+            db.setTransactionSuccessful(); //别忘了这句 Commit
+        } finally {
+            db.endTransaction(); //结束事务
+        }
+        return numValues;
     }
 
     @Override
