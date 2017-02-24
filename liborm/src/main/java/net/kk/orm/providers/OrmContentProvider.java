@@ -137,9 +137,9 @@ public abstract class OrmContentProvider extends ContentProvider {
                 Log.e(Orm.TAG, "query " + uri, e);
             }
         }
-        if (cursor != null) {
-            cursor.setNotificationUri(getContext().getContentResolver(), uri);
-        }
+//        if (cursor != null) {
+//            cursor.setNotificationUri(getContext().getContentResolver(), uri);
+//        }
         return cursor;
     }
 
@@ -175,7 +175,7 @@ public abstract class OrmContentProvider extends ContentProvider {
             long id = db.insert(table, null, values);
             uri = ContentUris.withAppendedId(uri, id);
         }
-        getContext().getContentResolver().notifyChange(uri, null);
+        getContext().getContentResolver().notifyChange(make(uri, TYPE_INSERT, values), null);
         return uri;
     }
 
@@ -201,7 +201,7 @@ public abstract class OrmContentProvider extends ContentProvider {
         } else {
             count = db.delete(table, selection, selectionArgs);
         }
-        getContext().getContentResolver().notifyChange(uri, null);
+        getContext().getContentResolver().notifyChange(make(uri, TYPE_DELETE, null, selection, selectionArgs), null);
         return count;
     }
 
@@ -221,7 +221,20 @@ public abstract class OrmContentProvider extends ContentProvider {
         } else {
             count = db.update(table, values, selection, selectionArgs);
         }
-        getContext().getContentResolver().notifyChange(uri, null);
+        getContext().getContentResolver().notifyChange(make(uri, TYPE_UPDATE, values), null);
         return count;
+    }
+
+    public static final int TYPE_INSERT = 0;
+    public static final int TYPE_DELETE = 1;
+    public static final int TYPE_UPDATE = 2;
+    public static final String QUERY_TYPE = "orm_type";
+
+    private Uri make(Uri uri, int type, ContentValues contentValues) {
+        return make(uri, type, contentValues, null, null);
+    }
+
+    protected Uri make(Uri uri, int type, ContentValues contentValues, String selection, String[] selectionArgs) {
+        return uri.buildUpon().appendQueryParameter(QUERY_TYPE, "" + type).build();
     }
 }

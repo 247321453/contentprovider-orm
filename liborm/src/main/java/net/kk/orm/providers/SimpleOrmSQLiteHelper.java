@@ -5,11 +5,20 @@ import android.content.Context;
 import net.kk.orm.IContentResolver;
 import net.kk.orm.Orm;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SimpleOrmSQLiteHelper extends OrmSQLiteOpenHelper {
     private IContentResolver mContentResolver;
     private List<Class<?>> mClassList;
+
+    public SimpleOrmSQLiteHelper(Context context, String name, int version, Class<?>... classes) {
+        super(context, name, version);
+        this.mClassList = new ArrayList<>();
+        for (Class<?> clazz : classes) {
+            mClassList.add(clazz);
+        }
+    }
 
     public SimpleOrmSQLiteHelper(Context context, String name, int version, List<Class<?>> list) {
         super(context, name, version);
