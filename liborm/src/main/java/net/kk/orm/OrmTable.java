@@ -227,7 +227,10 @@ public class OrmTable<T> extends IOrmBase {
         }
         if (mkeyColums.size() > 1) {
             //复合主键？
-            builder.append(", PRIMARY KEY (");
+            if (mColums.size() > 0) {
+                builder.append(",");
+            }
+            builder.append(" PRIMARY KEY (");
             int kindex = 0;
             for (OrmColumn column : mkeyColums) {
                 if (kindex > 0) {
