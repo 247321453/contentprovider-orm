@@ -94,17 +94,52 @@ public class WhereBuilder<T> {
         mStringBuilder.append(" ");
         mStringBuilder.append(column.getColumnName());
         mStringBuilder.append(" ");
-        mStringBuilder.append(wrapper(op));
-        if(value instanceof  ColumnValue){
+        if (value instanceof ColumnValue) {
+            mStringBuilder.append(wrapper(op));
             mStringBuilder.append(" ");
-            mStringBuilder.append(mask(((ColumnValue)value).getName()));
+            mStringBuilder.append(mask(((ColumnValue) value).getName()));
             mStringBuilder.append(" ");
-        }else {
-            mStringBuilder.append(" ? ");
-            mOPs++;
-            this.whereItems.add(column.toDbValue(mOrm, value, SQLiteOpera.QUERY));
+        } else {
+            Object dbValue = column.toDbValue(mOrm, value, SQLiteOpera.QUERY);
+            if (dbValue == null) {
+                op = wrapper(op);
+                if ("=".equals(op)) {
+                    mStringBuilder.append(" is NULL ");
+                } else if ("<>".equals(op)) {
+                    mStringBuilder.append(" not NULL ");
+                }
+            } else {
+                mStringBuilder.append(wrapper(op));
+                mStringBuilder.append(" ? ");
+                this.whereItems.add(column.toDbValue(mOrm, value, SQLiteOpera.QUERY));
+            }
         }
+        mOPs++;
         return this;
+    }
+
+    public WhereBuilder<T> orNotNULL(String columnName) {
+        return op(columnName, "!=", null, false);
+    }
+
+    public WhereBuilder<T> andNotNULL(String columnName) {
+        return op(columnName, "!=", null, true);
+    }
+
+    private WhereBuilder<T> andIsNULL(String columnName) {
+        return op(columnName, "==", null, true);
+    }
+
+    private WhereBuilder<T> orIsNULL(String columnName) {
+        return op(columnName, "==", null, false);
+    }
+
+    private WhereBuilder<T> notNULL(String columnName, boolean isAnd) {
+        return op(columnName, "!=", null, isAnd);
+    }
+
+    private WhereBuilder<T> isNULL(String columnName, boolean isAnd) {
+        return op(columnName, "==", null, isAnd);
     }
 
     private WhereBuilder<T> op(String columnName, String op, Object value, boolean isAnd) {
