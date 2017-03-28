@@ -108,9 +108,16 @@ public class WhereBuilder<T> {
                     mStringBuilder.append(" not NULL ");
                 }
             } else {
-                mStringBuilder.append(wrapper(op));
-                mStringBuilder.append(" ? ");
-                this.whereItems.add(column.toDbValue(mOrm, value, SQLiteOpera.QUERY));
+                op = wrapper(op);
+                mStringBuilder.append(op);
+                if("like".equalsIgnoreCase(op)){
+                    mStringBuilder.append("'");
+                    mStringBuilder.append(column.toDbValue(mOrm, value, SQLiteOpera.QUERY));
+                    mStringBuilder.append("'");
+                }else {
+                    mStringBuilder.append(" ? ");
+                    this.whereItems.add(column.toDbValue(mOrm, value, SQLiteOpera.QUERY));
+                }
             }
         }
         mOPs++;
