@@ -100,8 +100,7 @@ public class WhereBuilder<T> {
             mStringBuilder.append(mask(((ColumnValue) value).getName()));
             mStringBuilder.append(" ");
         } else {
-            Object dbValue = column.toDbValue(mOrm, value, SQLiteOpera.QUERY);
-            if (dbValue == null) {
+            if (value == null) {
                 op = wrapper(op);
                 if ("=".equals(op)) {
                     mStringBuilder.append(" is NULL ");
@@ -116,30 +115,6 @@ public class WhereBuilder<T> {
         }
         mOPs++;
         return this;
-    }
-
-    public WhereBuilder<T> orNotNULL(String columnName) {
-        return op(columnName, "!=", null, false);
-    }
-
-    public WhereBuilder<T> andNotNULL(String columnName) {
-        return op(columnName, "!=", null, true);
-    }
-
-    private WhereBuilder<T> andIsNULL(String columnName) {
-        return op(columnName, "==", null, true);
-    }
-
-    private WhereBuilder<T> orIsNULL(String columnName) {
-        return op(columnName, "==", null, false);
-    }
-
-    private WhereBuilder<T> notNULL(String columnName, boolean isAnd) {
-        return op(columnName, "!=", null, isAnd);
-    }
-
-    private WhereBuilder<T> isNULL(String columnName, boolean isAnd) {
-        return op(columnName, "==", null, isAnd);
     }
 
     private WhereBuilder<T> op(String columnName, String op, Object value, boolean isAnd) {

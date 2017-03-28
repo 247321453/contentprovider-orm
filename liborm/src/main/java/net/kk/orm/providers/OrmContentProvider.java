@@ -192,14 +192,20 @@ public abstract class OrmContentProvider extends ContentProvider {
         if (TextUtils.isEmpty(table)) return 0;
         SQLiteDatabase db = mOrmSQLiteOpenHelper.getWritableDatabase();
         int count;
-        if (isIdUri(uri)) {
-            long id = ContentUris.parseId(uri);
-            String idName = getIdColumn(uri);
-            String where = idName + "=" + id;
-            where += !TextUtils.isEmpty(selection) ? " and (" + selection + ")" : "";
-            count = db.delete(table, where, selectionArgs);
-        } else {
-            count = db.delete(table, selection, selectionArgs);
+        db.beginTransaction(); //开始事务
+        try {
+            if (isIdUri(uri)) {
+                long id = ContentUris.parseId(uri);
+                String idName = getIdColumn(uri);
+                String where = idName + "=" + id;
+                where += !TextUtils.isEmpty(selection) ? " and (" + selection + ")" : "";
+                count = db.delete(table, where, selectionArgs);
+            } else {
+                count = db.delete(table, selection, selectionArgs);
+            }
+            db.setTransactionSuccessful(); //别忘了这句 Commit
+        } finally {
+            db.endTransaction(); //结束事务
         }
         getContext().getContentResolver().notifyChange(make(uri, TYPE_DELETE, null, selection, selectionArgs), null);
         return count;
@@ -210,16 +216,22 @@ public abstract class OrmContentProvider extends ContentProvider {
         if (uri == null || checkWrite(uri)) return 0;
         final String table = getTableName(uri);
         if (TextUtils.isEmpty(table)) return 0;
-        SQLiteDatabase db = mOrmSQLiteOpenHelper.getWritableDatabase();
         int count;
-        if (isIdUri(uri)) {
-            long id = ContentUris.parseId(uri);
-            String idName = getIdColumn(uri);
-            String where = idName + "=" + id;
-            where += !TextUtils.isEmpty(selection) ? " and (" + selection + ")" : "";
-            count = db.update(table, values, where, selectionArgs);
-        } else {
-            count = db.update(table, values, selection, selectionArgs);
+        SQLiteDatabase db = mOrmSQLiteOpenHelper.getWritableDatabase();
+        db.beginTransaction(); //开始事务
+        try {
+            if (isIdUri(uri)) {
+                long id = ContentUris.parseId(uri);
+                String idName = getIdColumn(uri);
+                String where = idName + "=" + id;
+                where += !TextUtils.isEmpty(selection) ? " and (" + selection + ")" : "";
+                count = db.update(table, values, where, selectionArgs);
+            } else {
+                count = db.update(table, values, selection, selectionArgs);
+            }
+            db.setTransactionSuccessful(); //别忘了这句 Commit
+        } finally {
+            db.endTransaction(); //结束事务
         }
         getContext().getContentResolver().notifyChange(make(uri, TYPE_UPDATE, values), null);
         return count;
