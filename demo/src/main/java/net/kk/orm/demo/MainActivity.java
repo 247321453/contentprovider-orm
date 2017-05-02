@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 
+import net.kk.orm.demo.crypto.AESHelper;
 import net.kk.orm.demo.game.CardText;
 import net.kk.orm.demo.game.OrmCard;
 import net.kk.orm.Orm;
@@ -24,6 +25,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Log.e("orm", ""+new AESHelper(AESHelper.METHOD2, false).decrypt("123456","mQtQrRoNrZX203Z21q4Lyw=="));
         mOrm = new Orm(this);
         if (mOrm.select(CardInfo.class).count() == 0) {
             CardInfo cardInfo = new CardInfo(123);
@@ -34,6 +36,7 @@ public class MainActivity extends Activity {
                 mOrm.insert(cardInfo);
                 Log.i("orm", "insert cardinfo 123 ok");
             } catch (Exception e) {
+                //ignore
             }
             CardInfo cardInfo2 = new CardInfo(1234);
             cardInfo2.getData().setOt(2);
