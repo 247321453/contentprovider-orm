@@ -25,7 +25,6 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Log.e("orm", ""+new AESHelper(AESHelper.METHOD2, false).decrypt("123456","mQtQrRoNrZX203Z21q4Lyw=="));
         mOrm = new Orm(this);
         if (mOrm.select(CardInfo.class).count() == 0) {
             CardInfo cardInfo = new CardInfo(123);
