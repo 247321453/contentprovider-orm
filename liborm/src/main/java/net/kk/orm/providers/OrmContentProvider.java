@@ -129,9 +129,9 @@ public abstract class OrmContentProvider extends ContentProvider {
             }
         } else {
             try {
-//                if(Orm.DEBUG)
-                Log.d(Orm.TAG, "select " + Arrays.toString(columns) + " from " + table
-                        + " where " + selection + " " + Arrays.toString(selectionArgs) + " order by " + sortOrder);
+                if (Orm.DEBUG)
+                    Log.d(Orm.TAG, "select " + Arrays.toString(columns) + " from " + table
+                            + " where " + selection + " " + Arrays.toString(selectionArgs) + " order by " + sortOrder);
                 cursor = db.query(table, columns, selection, selectionArgs, null, null, sortOrder);
             } catch (Exception e) {
                 Log.e(Orm.TAG, "query " + uri, e);
@@ -187,9 +187,11 @@ public abstract class OrmContentProvider extends ContentProvider {
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
-        if (uri == null || checkWrite(uri)) return 0;
+        if (uri == null || !checkWrite(uri)) return 0;
         final String table = getTableName(uri);
-        if (TextUtils.isEmpty(table)) return 0;
+        if (TextUtils.isEmpty(table)) {
+            return 0;
+        }
         SQLiteDatabase db = mOrmSQLiteOpenHelper.getWritableDatabase();
         int count;
         db.beginTransaction(); //开始事务
@@ -213,7 +215,7 @@ public abstract class OrmContentProvider extends ContentProvider {
 
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-        if (uri == null || checkWrite(uri)) return 0;
+        if (uri == null || !checkWrite(uri)) return 0;
         final String table = getTableName(uri);
         if (TextUtils.isEmpty(table)) return 0;
         int count;
