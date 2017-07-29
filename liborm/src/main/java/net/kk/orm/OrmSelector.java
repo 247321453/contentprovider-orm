@@ -57,7 +57,6 @@ public class OrmSelector<T> {
         if (columns.size() == 1) {
             OrmColumn column = columns.get(0);
             if (mTable.getType().equals(t.getClass())) {
-                //就是bean，得获取id的值
                 return where(column.getColumnName(), "=", column.getValue(t)).findFirst();
             }
             return where(column.getColumnName(), "=", t).findFirst();
@@ -123,6 +122,7 @@ public class OrmSelector<T> {
 
     public T findFirst() {
         T t = null;
+        limit(1);
         Cursor cursor = queryAll(true, mTable.getAllColumns());
         if (cursor != null) {
 //            Log.w(Orm.TAG, "find "+ Arrays.toString(cursor.getColumnNames()));

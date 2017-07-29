@@ -168,7 +168,6 @@ public class OrmTable<T> extends IOrmBase {
             if (cursor != null) {
                 cursor.close();
             }
-            //查询没问题，表存在
             return;
         } catch (Exception e) {
 
@@ -226,7 +225,6 @@ public class OrmTable<T> extends IOrmBase {
             builders++;
         }
         if (mkeyColums.size() > 1) {
-            //复合主键？
             if (mColums.size() > 0) {
                 builder.append(",");
             }
@@ -335,14 +333,12 @@ public class OrmTable<T> extends IOrmBase {
     }
 
     private boolean enableField(Field field) {
-        //忽略静态变量
         if (Modifier.isStatic(field.getModifiers())) {
             return false;
         }
         if (Modifier.isTransient(field.getModifiers())) {
             return false;
         }
-        //主动忽略
 //        if (field.getAnnotation(Column.class) != null) {
 //            return true;
 //        }

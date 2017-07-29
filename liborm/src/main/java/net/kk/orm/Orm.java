@@ -48,9 +48,6 @@ public class Orm {
         return sIJsonConvert;
     }
 
-    /***
-     * 如果使用自定义类
-     */
     public Orm(IContentResolver helper) {
         this.helper = helper;
     }
@@ -120,7 +117,6 @@ public class Orm {
     }
 
     public <T> long replace(T object) throws Exception {
-        //检查key是否存在
         if (update(object) > 0) {
             return 1;
         }
@@ -170,9 +166,6 @@ public class Orm {
         return updateAll(table.getType(), contentValues, whereBuilder);
     }
 
-    /***
-     * 如果没有主key，则是全部更新
-     */
     @SuppressWarnings("unchecked")
     public <T> int update(T object, String... cols) throws Exception {
         if (object == null) return 0;

@@ -9,8 +9,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Union {
     String key() default "";
-    /***
-     * 用于外键触发处理
-     */
     boolean readOnly() default false;
 }

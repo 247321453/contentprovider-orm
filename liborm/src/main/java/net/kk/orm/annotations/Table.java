@@ -12,9 +12,6 @@ public @interface Table {
 
     boolean readOnly() default false;
 
-    /**
-     * 类型名字
-     */
     String typeName() default "";
 
     String createSql() default "";

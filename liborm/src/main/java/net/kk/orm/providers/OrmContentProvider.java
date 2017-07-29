@@ -120,7 +120,7 @@ public abstract class OrmContentProvider extends ContentProvider {
         if (isIdUri(uri)) {
             long id = ContentUris.parseId(uri);
             String idName = getIdColumn(uri);
-            String where = idName + "=" + id;// 获取指定id的记录
+            String where = idName + "=" + id;
             where += !TextUtils.isEmpty(selection) ? " and (" + selection + ")" : "";
             try {
                 cursor = db.query(table, columns, where, selectionArgs, null, null, sortOrder);
@@ -148,16 +148,15 @@ public abstract class OrmContentProvider extends ContentProvider {
         if (uri == null || !checkWrite(uri)) return 0;
         int numValues = 0;
         SQLiteDatabase db = mOrmSQLiteOpenHelper.getWritableDatabase();
-        db.beginTransaction(); //开始事务
+        db.beginTransaction();
         try {
-            //数据库操作
             numValues = values.length;
             for (int i = 0; i < numValues; i++) {
                 insertInner(uri, values[i]);
             }
-            db.setTransactionSuccessful(); //别忘了这句 Commit
+            db.setTransactionSuccessful();
         } finally {
-            db.endTransaction(); //结束事务
+            db.endTransaction();
         }
         return numValues;
     }
@@ -194,7 +193,7 @@ public abstract class OrmContentProvider extends ContentProvider {
         }
         SQLiteDatabase db = mOrmSQLiteOpenHelper.getWritableDatabase();
         int count;
-        db.beginTransaction(); //开始事务
+        db.beginTransaction();
         try {
             if (isIdUri(uri)) {
                 long id = ContentUris.parseId(uri);
@@ -205,9 +204,9 @@ public abstract class OrmContentProvider extends ContentProvider {
             } else {
                 count = db.delete(table, selection, selectionArgs);
             }
-            db.setTransactionSuccessful(); //别忘了这句 Commit
+            db.setTransactionSuccessful();
         } finally {
-            db.endTransaction(); //结束事务
+            db.endTransaction();
         }
         getContext().getContentResolver().notifyChange(make(uri, TYPE_DELETE, null, selection, selectionArgs), null);
         return count;
@@ -220,7 +219,7 @@ public abstract class OrmContentProvider extends ContentProvider {
         if (TextUtils.isEmpty(table)) return 0;
         int count;
         SQLiteDatabase db = mOrmSQLiteOpenHelper.getWritableDatabase();
-        db.beginTransaction(); //开始事务
+        db.beginTransaction();
         try {
             if (isIdUri(uri)) {
                 long id = ContentUris.parseId(uri);
@@ -231,9 +230,9 @@ public abstract class OrmContentProvider extends ContentProvider {
             } else {
                 count = db.update(table, values, selection, selectionArgs);
             }
-            db.setTransactionSuccessful(); //别忘了这句 Commit
+            db.setTransactionSuccessful();
         } finally {
-            db.endTransaction(); //结束事务
+            db.endTransaction();
         }
         getContext().getContentResolver().notifyChange(make(uri, TYPE_UPDATE, values), null);
         return count;
