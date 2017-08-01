@@ -33,4 +33,5 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':liborm')
     compile 'com.google.code.gson:gson:2.2.4'
+//    compile 'com.kk.tool:liborm:1.0.0'
 }

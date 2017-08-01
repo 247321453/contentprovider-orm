@@ -20,7 +20,7 @@ import java.util.Map;
 
 public class Orm {
     public static final String TAG = "orm";
-    public static final boolean DEBUG = false;
+    public static boolean DEBUG = false;
     private IContentResolver helper;
     private static Map<Class<?>, OrmTable<?>> sOrmTableHashMap = new HashMap<>();
     private static IOjectConvert sIJsonConvert;
@@ -62,6 +62,10 @@ public class Orm {
 
     public static IContentResolver getContentResolver(Context context) {
         return new DefaultContentResolver(context);
+    }
+
+    public static void setDebug(boolean debug) {
+        DEBUG = debug;
     }
 
     public <T> T read(Class<T> tClass, Cursor cursor) {
