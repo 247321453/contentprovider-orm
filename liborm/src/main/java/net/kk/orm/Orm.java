@@ -120,8 +120,8 @@ public class Orm {
         return delete(table.getType(), whereBuilder);
     }
 
-    public <T> long replace(T object) throws Exception {
-        if (update(object) > 0) {
+    public <T> long replace(T object,String... cols) throws Exception {
+        if (update(object, cols) > 0) {
             return 1;
         }
         return insert(object);
