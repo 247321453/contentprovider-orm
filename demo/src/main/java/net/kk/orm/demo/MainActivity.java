@@ -7,6 +7,7 @@ import android.util.Log;
 import net.kk.orm.Orm;
 import net.kk.orm.demo.bean.SetBean;
 import net.kk.orm.demo.bean.StubBean;
+import net.kk.orm.demo.bean.StubBean2;
 import net.kk.orm.demo.db.Datas;
 
 import java.util.ArrayList;
@@ -55,7 +56,7 @@ id自增 ok
                 .where(Datas.Set.NAME, "=", "hello")
                 .findFirst();
         Log.i("orm", "get setBean:" + setBean2);
-        Log.i("orm", "get stubs:" +mOrm.select(StubBean.class).findAll());
+        Log.i("orm", "get stubs:" + mOrm.select(StubBean.class).findAll());
     }
 
     private void testUpdate() throws Exception {
@@ -85,8 +86,16 @@ id自增 ok
 
         List<StubBean> stubBeen = new ArrayList<>();
         stubBeen.add(new StubBean("1", "1"));
-        stubBeen.add(new StubBean("stub", "hello"));
+        stubBeen.add(new StubBean("stub", "hello2"));
+        //自动update存在的值
         setBean.setStubBeans(stubBeen);
+        mOrm.insert(new StubBean("stub", "100"));
+
+        List<StubBean2> stubBeen2 = new ArrayList<>();
+        stubBeen2.add(new StubBean2(1, "1"));
+        stubBeen2.add(new StubBean2(2, "hello2"));
+        //自动update存在的值
+        setBean.setStubBeans2(stubBeen2);
         return mOrm.insert(setBean);
     }
 

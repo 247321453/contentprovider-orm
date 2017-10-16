@@ -4,8 +4,10 @@ import net.kk.orm.annotations.Column;
 import net.kk.orm.annotations.ColumnConvert;
 import net.kk.orm.annotations.PrimaryKey;
 import net.kk.orm.annotations.Table;
+import net.kk.orm.demo.converts.SecConvert;
+import net.kk.orm.demo.converts.StubBeen2Convert;
+import net.kk.orm.demo.converts.StubBeenConvert;
 import net.kk.orm.demo.db.Datas;
-import net.kk.orm.demo.sec.SecConvert;
 
 import java.util.Arrays;
 import java.util.List;
@@ -23,8 +25,11 @@ public class SetBean {
     @Column(Datas.Set.STUB)
     private StubBean mStubBean;
     @Column(Datas.Set.STUBS)
+    @ColumnConvert(StubBeenConvert.class)
     private List<StubBean> mStubBeans;
-
+    @Column(Datas.Set.STUBS2)
+    @ColumnConvert(StubBeen2Convert.class)
+    private List<StubBean2> mStubBeans2;
     //第一次MyContentProvider改为1
     @Column(value = "testAdd", defaultValue = "hello")
     private String testAdd;
@@ -78,6 +83,14 @@ public class SetBean {
         mStubBeans = stubBeans;
     }
 
+    public List<StubBean2> getStubBeans2() {
+        return mStubBeans2;
+    }
+
+    public void setStubBeans2(List<StubBean2> stubBeans2) {
+        mStubBeans2 = stubBeans2;
+    }
+
     @Override
     public String toString() {
         return "SetBean{" +
@@ -86,6 +99,7 @@ public class SetBean {
                 ", users=" + Arrays.toString(users) +
                 ", mStubBean=" + mStubBean +
                 ", mStubBeans=" + mStubBeans +
+                ", mStubBeans2=" + mStubBeans2 +
                 ", testAdd='" + testAdd + '\'' +
                 ", testAdd2=" + testAdd2 +
                 '}';

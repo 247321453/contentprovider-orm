@@ -8,11 +8,10 @@ import android.net.Uri;
 import android.util.Log;
 
 import net.kk.orm.converts.IConvert;
-import net.kk.orm.converts.TypeConverts;
 import net.kk.orm.converts.IOjectConvert;
+import net.kk.orm.converts.TypeConverts;
 import net.kk.orm.enums.SQLiteOpera;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -120,7 +119,7 @@ public class Orm {
         return delete(table.getType(), whereBuilder);
     }
 
-    public <T> long replace(T object,String... cols) throws Exception {
+    public <T> long replace(T object, String... cols) throws Exception {
         if (update(object, cols) > 0) {
             return 1;
         }
@@ -142,8 +141,8 @@ public class Orm {
             where = whereBuilder.getWhereString();
             whereArgs = whereBuilder.getWhereItems();
         }
-//        if(Orm.DEBUG)
-        Log.d(Orm.TAG, "update " + contentValues.size() + " where " + where + " args=" + Arrays.toString(whereArgs));
+        if (Orm.DEBUG)
+            Log.d(Orm.TAG, "update " + contentValues.size() + " where " + where + " args=" + Arrays.toString(whereArgs));
         if (contentValues.size() == 0) {
             return 0;
         }

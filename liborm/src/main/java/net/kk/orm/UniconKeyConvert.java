@@ -32,10 +32,8 @@ class UniconKeyConvert<D, T> implements IConvert<D, T> {
         Object id = column.getValue(value);
         if (!column.isReadOnly()) {
             try {
-                if (opera == SQLiteOpera.INSERT) {
-                    orm.insert(value);
-                } else if (opera == SQLiteOpera.UPDATE) {
-                    orm.update(value);
+                if (opera == SQLiteOpera.INSERT || opera == SQLiteOpera.UPDATE) {
+                    orm.replace(value);
                 } else if (opera == SQLiteOpera.DELETE) {
                     orm.delete(value);
                 }
