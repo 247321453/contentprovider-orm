@@ -68,6 +68,7 @@ class OrmColumn extends IOrmBase {
         IConvert<?, ?> typeConvert = null;
         String col = null;
         OrmTable<?> tOrmTable = Orm.table(type);
+        //主键
         OrmColumn ormColumn = null;
         if (mUnion == null || TextUtils.isEmpty(mUnion.key())) {
             ormColumn = tOrmTable.findKey();
@@ -82,12 +83,20 @@ class OrmColumn extends IOrmBase {
             String key2 = type.getName() + "@" + col;
             typeConvert = TypeConverts.get().getUniconKey(key2);
             if (typeConvert == null) {
-                if (Integer.class.equals(ormColumn.getType())) {
+                if (tOrmTable.getKeyColumns() != null && tOrmTable.getKeyColumns().size() > 1) {
+                    //TODO 复合主键
+                } else if (Integer.class.equals(ormColumn.getType())) {
                     typeConvert = new UniconKeyConvert<>(type, Integer.class, ormColumn);
                 } else if (Long.class.equals(ormColumn.getType())) {
                     typeConvert = new UniconKeyConvert<>(type, Long.class, ormColumn);
                 } else if (String.class.equals(ormColumn.getType())) {
                     typeConvert = new UniconKeyConvert<>(type, String.class, ormColumn);
+                } else if (Double.class.equals(ormColumn.getType())) {
+                    typeConvert = new UniconKeyConvert<>(type, Double.class, ormColumn);
+                } else if (Float.class.equals(ormColumn.getType())) {
+                    typeConvert = new UniconKeyConvert<>(type, Float.class, ormColumn);
+                } else {
+                    //不支持类型主键
                 }
                 if (typeConvert != null) {
                     TypeConverts.get().registerUniconKey(key2, typeConvert);
@@ -132,14 +141,14 @@ class OrmColumn extends IOrmBase {
                 '}';
     }
 
-    public boolean hasDefaultValue(){
+    public boolean hasDefaultValue() {
         return !"___NULL".equals(mColumn.defaultValue());
     }
 
     public String getDefaultValue() {
         if (TextUtils.isEmpty(mDefaultText)) {
             mDefaultText = mColumn.defaultValue();
-            if ("___NULL".equals(mDefaultText)|| mDefaultText == null) {
+            if ("___NULL".equals(mDefaultText) || mDefaultText == null) {
                 mDefaultText = "null";
             } else if (getSQLiteType() == SQLiteType.TEXT) {
                 if (mDefaultText.startsWith("'") && mDefaultText.endsWith("'")) {
