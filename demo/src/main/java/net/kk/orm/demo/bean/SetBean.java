@@ -8,6 +8,7 @@ import net.kk.orm.demo.db.Datas;
 import net.kk.orm.demo.sec.SecConvert;
 
 import java.util.Arrays;
+import java.util.List;
 
 @Table(name = Datas.Set.TABLE, uri = Datas.Set.CONTENT_URI_STRING)
 public class SetBean {
@@ -21,6 +22,8 @@ public class SetBean {
     private int[] users;
     @Column(Datas.Set.STUB)
     private StubBean mStubBean;
+    @Column(Datas.Set.STUBS)
+    private List<StubBean> mStubBeans;
 
     //第一次MyContentProvider改为1
     @Column(value = "testAdd", defaultValue = "hello")
@@ -67,6 +70,14 @@ public class SetBean {
         mStubBean = stubBean;
     }
 
+    public List<StubBean> getStubBeans() {
+        return mStubBeans;
+    }
+
+    public void setStubBeans(List<StubBean> stubBeans) {
+        mStubBeans = stubBeans;
+    }
+
     @Override
     public String toString() {
         return "SetBean{" +
@@ -74,6 +85,7 @@ public class SetBean {
                 ", name='" + name + '\'' +
                 ", users=" + Arrays.toString(users) +
                 ", mStubBean=" + mStubBean +
+                ", mStubBeans=" + mStubBeans +
                 ", testAdd='" + testAdd + '\'' +
                 ", testAdd2=" + testAdd2 +
                 '}';

@@ -29,6 +29,14 @@ public class StubBean {
         this.address = address;
     }
 
+    public StubBean() {
+    }
+
+    public StubBean(String name, String address) {
+        this.name = name;
+        this.address = address;
+    }
+
     @Override
     public String toString() {
         return "StubBean{" +

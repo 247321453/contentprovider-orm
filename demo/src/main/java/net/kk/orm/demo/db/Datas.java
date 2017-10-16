@@ -15,6 +15,7 @@ public interface Datas {
         String NAME = "name";
         String USERS = "users";
         String STUB = "stub";
+        String STUBS = "stubs";
     }
 
     interface Stub {
