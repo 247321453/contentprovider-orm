@@ -36,6 +36,9 @@ public class SetBean {
     @Column(value = "testAdd2", defaultValue = "1")
     private int testAdd2;
 
+    @Column("stats")
+    public boolean status;
+
     public long getId() {
         return id;
     }
@@ -102,6 +105,7 @@ public class SetBean {
                 ", mStubBeans2=" + mStubBeans2 +
                 ", testAdd='" + testAdd + '\'' +
                 ", testAdd2=" + testAdd2 +
+                ", status=" + status +
                 '}';
     }
 }

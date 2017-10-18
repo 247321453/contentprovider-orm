@@ -49,7 +49,12 @@ id自增 ok
         } else {
             //倒序
             SetBean setBean = mOrm.select(SetBean.class).orderBy(Datas.Set.ID, true).findFirst();
-            Log.i("orm", "save setBean:" + setBean);
+            Log.i("orm", "get setBean:" + setBean);
+            setBean.status = true;
+            mOrm.update(setBean, "stats");
+            setBean = mOrm.select(SetBean.class).orderBy(Datas.Set.ID, true).findFirst();
+            Log.i("orm", "get setBean 2:" + setBean);
+
         }
         //根据加密字段查询
         SetBean setBean2 = mOrm.select(SetBean.class)
@@ -96,6 +101,7 @@ id自增 ok
         stubBeen2.add(new StubBean2(2, "hello2"));
         //自动update存在的值
         setBean.setStubBeans2(stubBeen2);
+        setBean.status  =true;
         return mOrm.insert(setBean);
     }
 
