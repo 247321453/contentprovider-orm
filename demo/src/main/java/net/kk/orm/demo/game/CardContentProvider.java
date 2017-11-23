@@ -46,7 +46,8 @@ public class CardContentProvider extends OrmContentProvider {
     @Override
     protected OrmSQLiteOpenHelper createSQLiteOpenHelper(Context context) {
         if (mMyOrmSQLiteHelper == null) {
-            mMyOrmSQLiteHelper = new SimpleOrmSQLiteHelper(context, OrmCard.DBNAME, OrmCard.VERSION,
+            mMyOrmSQLiteHelper = new OrmSQLiteOpenHelper(context, OrmCard.DBNAME, OrmCard.VERSION,
+                    OrmCard.AUTHORITY,
                     Arrays.asList(CardData.class, CardText.class, Card.class, CardFull.class, CardInfo.class));
         }
         return mMyOrmSQLiteHelper;

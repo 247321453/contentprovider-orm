@@ -27,10 +27,10 @@ public class OrmSQLiteOpenHelper extends SQLiteOpenHelper implements ISQLiteHelp
     private String mDbName;
     private int mDbVersion;
     private Map<String, String> mCacheTableNames = new HashMap<>();
-    private static OrmSQLiteOpenHelper sOrmSQLiteOpenHelper;
+    private static Map<String, OrmSQLiteOpenHelper> sOrmSQLiteOpenHelpers = new HashMap<>();
 
-    public static OrmSQLiteOpenHelper get() {
-        return sOrmSQLiteOpenHelper;
+    public static OrmSQLiteOpenHelper get(String authority) {
+        return sOrmSQLiteOpenHelpers.get(authority);
     }
 
     public Context getContext() {
@@ -62,8 +62,8 @@ public class OrmSQLiteOpenHelper extends SQLiteOpenHelper implements ISQLiteHelp
                                List<Class<?>> classes,
                                SQLiteDatabase.CursorFactory factory) {
         super(context, name, factory, version);
-        sOrmSQLiteOpenHelper = this;
         this.context = context;
+        sOrmSQLiteOpenHelpers.put(authority, this);
         mTables = new ArrayList<>();
         if (classes != null) {
             mTables.addAll(classes);
@@ -79,10 +79,6 @@ public class OrmSQLiteOpenHelper extends SQLiteOpenHelper implements ISQLiteHelp
             return true;
         }
         return false;
-    }
-
-    public boolean isSingleProcess(Uri uri) {
-        return uri.getAuthority().equals(getAuthority());
     }
 
     public OrmTable<?> getTable(Uri uri) {

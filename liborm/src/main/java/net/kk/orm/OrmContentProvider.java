@@ -11,17 +11,14 @@ import java.util.Map;
 
 public abstract class OrmContentProvider extends ContentProvider {
     protected abstract OrmSQLiteOpenHelper createSQLiteOpenHelper(Context context);
+
     protected OrmSQLiteOpenHelper mOrmSQLiteOpenHelper;
     private Map<String, String> mCacheTabletypes = new HashMap<>();
 
     @Override
     public boolean onCreate() {
-        if (OrmSQLiteOpenHelper.get() != null) {
-            mOrmSQLiteOpenHelper = OrmSQLiteOpenHelper.get();
-        } else {
-            mOrmSQLiteOpenHelper = createSQLiteOpenHelper(getContext());
-            mOrmSQLiteOpenHelper.initClass();
-        }
+        mOrmSQLiteOpenHelper = createSQLiteOpenHelper(getContext());
+        mOrmSQLiteOpenHelper.initClass();
         return true;
     }
 
