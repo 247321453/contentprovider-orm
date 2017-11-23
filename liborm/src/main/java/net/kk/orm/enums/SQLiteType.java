@@ -7,4 +7,5 @@ public enum SQLiteType {
     DOUBLE,
     FLOAT,
     BLOB,
+    UNKNOWN;
 }

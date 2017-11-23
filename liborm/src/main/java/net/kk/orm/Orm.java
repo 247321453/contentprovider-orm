@@ -3,12 +3,10 @@ package net.kk.orm;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
 
 import net.kk.orm.converts.IConvert;
-import net.kk.orm.converts.IOjectConvert;
 import net.kk.orm.converts.TypeConverts;
 import net.kk.orm.enums.SQLiteOpera;
 
@@ -20,9 +18,8 @@ import java.util.Map;
 public class Orm {
     public static final String TAG = "orm";
     public static boolean DEBUG = false;
-    private IContentResolver helper;
+    private ISQLiteHelper helper;
     private static Map<Class<?>, OrmTable<?>> sOrmTableHashMap = new HashMap<>();
-    private static IOjectConvert sIJsonConvert;
 
     @SuppressWarnings("unchecked")
     public static <T> OrmTable<T> table(Class<T> pClass) {
@@ -39,37 +36,28 @@ public class Orm {
         return (OrmTable<T>) column;
     }
 
-    public static void initJson(IOjectConvert IJsonConvert) {
-        sIJsonConvert = IJsonConvert;
-    }
-
-    public static IOjectConvert getJsonConvert() {
-        return sIJsonConvert;
-    }
-
-    public Orm(IContentResolver helper) {
-        this.helper = helper;
+    public Orm(ISQLiteHelper helper) {
+        if (helper instanceof MultiProcessSQLiteHelper) {
+            this.helper = helper;
+        } else {
+            this.helper = new MultiProcessSQLiteHelper(helper);
+        }
     }
 
     public Orm(Context context) {
-        this.helper = new DefaultContentResolver(context);
+        this(getContentResolver(context));
     }
 
-    public IContentResolver getContentResolver() {
+    public ISQLiteHelper getContentResolver() {
         return helper;
     }
 
-    public static IContentResolver getContentResolver(Context context) {
-        return new DefaultContentResolver(context);
+    public static ISQLiteHelper getContentResolver(Context context) {
+        return new ContentSQLHelper(context.getContentResolver());
     }
 
     public static void setDebug(boolean debug) {
         DEBUG = debug;
-    }
-
-    public <T> T read(Class<T> tClass, Cursor cursor) {
-        OrmTable<T> tOrmTable = table(tClass);
-        return tOrmTable.read(this, cursor);
     }
 
     public <T> WhereBuilder<T> where(OrmTable<T> table) {
@@ -195,8 +183,9 @@ public class Orm {
             table.write(this, obj, contentValues, SQLiteOpera.INSERT, null);
         }
         try {
-            helper.insertList(table.getTableUri(), values);
+            helper.bulkInsert(table.getTableUri(), values);
         } catch (Exception e) {
+            throw e;
         }
         return 0;
     }

@@ -4,9 +4,8 @@ import android.content.Context;
 import android.util.Log;
 
 import net.kk.orm.Orm;
-import net.kk.orm.providers.OrmContentProvider;
-import net.kk.orm.providers.OrmSQLiteOpenHelper;
-import net.kk.orm.providers.SimpleOrmSQLiteHelper;
+import net.kk.orm.OrmContentProvider;
+import net.kk.orm.OrmSQLiteOpenHelper;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -45,7 +44,7 @@ public class CardContentProvider extends OrmContentProvider {
     }
 
     @Override
-    protected OrmSQLiteOpenHelper getSQLiteOpenHelper(Context context) {
+    protected OrmSQLiteOpenHelper createSQLiteOpenHelper(Context context) {
         if (mMyOrmSQLiteHelper == null) {
             mMyOrmSQLiteHelper = new SimpleOrmSQLiteHelper(context, OrmCard.DBNAME, OrmCard.VERSION,
                     Arrays.asList(CardData.class, CardText.class, Card.class, CardFull.class, CardInfo.class));

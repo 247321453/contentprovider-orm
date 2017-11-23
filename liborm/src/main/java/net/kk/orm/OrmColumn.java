@@ -3,6 +3,7 @@ package net.kk.orm;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.os.Build;
+import android.os.Parcelable;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -11,7 +12,6 @@ import net.kk.orm.annotations.ColumnConvert;
 import net.kk.orm.annotations.PrimaryKey;
 import net.kk.orm.annotations.Union;
 import net.kk.orm.converts.IConvert;
-import net.kk.orm.converts.JsonTextConvert;
 import net.kk.orm.converts.TypeConverts;
 import net.kk.orm.enums.SQLiteOpera;
 import net.kk.orm.enums.SQLiteType;
@@ -59,8 +59,9 @@ class OrmColumn extends IOrmBase {
             }
         }
         if (mConvert == null) {
-            mConvert = new JsonTextConvert<>(mRClass, Orm.getJsonConvert());
-            TypeConverts.get().register(mRClass, mConvert);
+            if (Parcelable.class.isAssignableFrom(pClass)) {
+                mConvert = new ParcelableConvert<>(pClass);
+            }
         }
     }
 
@@ -121,6 +122,9 @@ class OrmColumn extends IOrmBase {
 
     //
     public SQLiteType getSQLiteType() {
+        if (mConvert == null) {
+            return SQLiteType.TEXT;
+        }
         return mConvert.getSQLiteType();
     }
 
@@ -184,6 +188,9 @@ class OrmColumn extends IOrmBase {
     }
 
     public Object toDbValue(Orm orm, Object val, SQLiteOpera opera) {
+        if (mConvert == null) {
+            return null;
+        }
         if (val != null) {
             try {
                 IConvert iConvert = mConvert;
@@ -249,6 +256,9 @@ class OrmColumn extends IOrmBase {
     }
 
     public Object read(Orm orm, Cursor cursor) {
+        if (mConvert == null) {
+            return null;
+        }
         int index = -1;
         try {
             if (Build.VERSION.SDK_INT <= 17) {

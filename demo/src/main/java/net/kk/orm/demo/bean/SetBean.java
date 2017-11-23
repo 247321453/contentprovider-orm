@@ -1,5 +1,8 @@
 package net.kk.orm.demo.bean;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import net.kk.orm.annotations.Column;
 import net.kk.orm.annotations.ColumnConvert;
 import net.kk.orm.annotations.PrimaryKey;
@@ -9,11 +12,12 @@ import net.kk.orm.demo.converts.StubBeen2Convert;
 import net.kk.orm.demo.converts.StubBeenConvert;
 import net.kk.orm.demo.db.Datas;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 @Table(name = Datas.Set.TABLE, uri = Datas.Set.CONTENT_URI_STRING)
-public class SetBean {
+public class SetBean implements Parcelable {
     @PrimaryKey(autoIncrement = true)
     @Column(Datas.Set.ID)
     private long id;
@@ -108,4 +112,46 @@ public class SetBean {
                 ", status=" + status +
                 '}';
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(this.id);
+        dest.writeString(this.name);
+        dest.writeIntArray(this.users);
+        dest.writeParcelable(this.mStubBean, flags);
+        dest.writeTypedList(this.mStubBeans);
+        dest.writeTypedList(this.mStubBeans2);
+        dest.writeString(this.testAdd);
+        dest.writeInt(this.testAdd2);
+        dest.writeByte(this.status ? (byte) 1 : (byte) 0);
+    }
+
+    protected SetBean(Parcel in) {
+        this.id = in.readLong();
+        this.name = in.readString();
+        this.users = in.createIntArray();
+        this.mStubBean = in.readParcelable(StubBean.class.getClassLoader());
+        this.mStubBeans = in.createTypedArrayList(StubBean.CREATOR);
+        this.mStubBeans2 = in.createTypedArrayList(StubBean2.CREATOR);
+        this.testAdd = in.readString();
+        this.testAdd2 = in.readInt();
+        this.status = in.readByte() != 0;
+    }
+
+    public static final Creator<SetBean> CREATOR = new Creator<SetBean>() {
+        @Override
+        public SetBean createFromParcel(Parcel source) {
+            return new SetBean(source);
+        }
+
+        @Override
+        public SetBean[] newArray(int size) {
+            return new SetBean[size];
+        }
+    };
 }

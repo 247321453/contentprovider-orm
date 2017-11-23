@@ -74,7 +74,7 @@ public class TypeConverts {
             }
         }
 //        if (typeConvert == null) {
-//            typeConvert = new JsonTextConvert<>(type, Orm.getJsonConvert());
+//            typeConvert = new JsonTextConvert<>(type, Orm.getObjectConvert());
 //            CLASS_TYPE_CONVERT_MAP.put(key, typeConvert);
 //        }
         return typeConvert;

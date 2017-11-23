@@ -9,7 +9,7 @@ import java.util.List;
 
 public class OrmSelector<T> {
     private OrmTable<T> mTable;
-    private IContentResolver helper;
+    private ISQLiteHelper helper;
     private String mLimit;
     private String mOrderBy;
     private WhereBuilder whereBuilder;
