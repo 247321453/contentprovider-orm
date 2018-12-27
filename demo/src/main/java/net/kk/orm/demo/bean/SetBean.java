@@ -42,6 +42,10 @@ public class SetBean implements Parcelable {
 
     @Column("stats")
     public boolean status;
+    @Column("testFloat")
+    public float testFloat;
+    @Column("testDouble")
+    public double testDouble;
 
     public long getId() {
         return id;
@@ -110,6 +114,8 @@ public class SetBean implements Parcelable {
                 ", testAdd='" + testAdd + '\'' +
                 ", testAdd2=" + testAdd2 +
                 ", status=" + status +
+                ", testFloat=" + testFloat +
+                ", testDouble=" + testDouble +
                 '}';
     }
 

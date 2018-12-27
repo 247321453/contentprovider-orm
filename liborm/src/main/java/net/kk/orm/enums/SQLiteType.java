@@ -4,8 +4,7 @@ public enum SQLiteType {
     INTEGER,
     LONG,
     TEXT,
-    DOUBLE,
-    FLOAT,
+    REAL,
     BLOB,
     UNKNOWN;
 }

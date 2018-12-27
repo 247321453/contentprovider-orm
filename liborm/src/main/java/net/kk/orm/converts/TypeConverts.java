@@ -20,8 +20,8 @@ public class TypeConverts {
         register(Boolean.class, new BooleanConvert());
         register(Date.class, new DateConvert());
         register(byte[].class, new SameConvert<>(byte[].class, SQLiteType.BLOB));
-        register(Double.class, new SameConvert<>(Double.class, SQLiteType.DOUBLE));
-        register(Float.class, new SameConvert<>(Float.class, SQLiteType.FLOAT));
+        register(Double.class, new SameConvert<>(Double.class, SQLiteType.REAL));
+        register(Float.class, new SameConvert<>(Float.class, SQLiteType.REAL));
         register(Integer.class, new SameConvert<>(Integer.class, SQLiteType.INTEGER));
         register(Long.class, new SameConvert<>(Long.class, SQLiteType.LONG));
         register(String.class, new SameConvert<>(String.class, SQLiteType.TEXT));

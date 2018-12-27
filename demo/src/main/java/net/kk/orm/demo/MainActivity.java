@@ -60,7 +60,11 @@ id自增 ok
         SetBean setBean2 = mOrm.select(SetBean.class)
                 .where(Datas.Set.NAME, "=", "hello")
                 .findFirst();
-        Log.i("orm", "get setBean:" + setBean2);
+        Log.i("orm", "get setBean by name:" + setBean2);
+        setBean2 = mOrm.select(SetBean.class)
+                .where("testDouble", "=", 1.123456789123456789d)
+                .findFirst();
+        Log.i("orm", "get setBean by testDouble:" + setBean2);
         Log.i("orm", "get stubs:" + mOrm.select(StubBean.class).findAll());
     }
 
@@ -82,6 +86,8 @@ id自增 ok
     private long addSet() throws Exception {
         SetBean setBean = new SetBean();
         setBean.setId(111);
+        setBean.testDouble=1.123456789123456789;
+        setBean.testFloat=1.1234567f;
         setBean.setName("hello");
         setBean.setUsers(new int[]{1, 2, 3});
         StubBean stubBean = new StubBean();

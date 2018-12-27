@@ -237,11 +237,12 @@ class OrmColumn extends IOrmBase {
                 case LONG:
                     contentValues.put(name, (Long) val);
                     break;
-                case DOUBLE:
-                    contentValues.put(name, (Double) val);
-                    break;
-                case FLOAT:
-                    contentValues.put(name, (Float) val);
+                case REAL:
+                    if (val instanceof Float) {
+                        contentValues.put(name, (Float) val);
+                    } else {
+                        contentValues.put(name, (Double) val);
+                    }
                     break;
                 case BLOB:
                     contentValues.put(name, (byte[]) val);
@@ -288,11 +289,8 @@ class OrmColumn extends IOrmBase {
             case LONG:
                 obj = cursor.getLong(index);
                 break;
-            case DOUBLE:
+            case REAL:
                 obj = cursor.getDouble(index);
-                break;
-            case FLOAT:
-                obj = cursor.getFloat(index);
                 break;
             case BLOB:
                 obj = cursor.getBlob(index);
@@ -310,7 +308,17 @@ class OrmColumn extends IOrmBase {
 
     public void setValue(Object o, Object value) {
         try {
-            mField.set(o, value);
+            if (value instanceof Double) {
+                if (mField.getType() == Float.class || mField.getType() == float.class) {
+                    mField.setFloat(o, ((Double) value).floatValue());
+                } else if (mField.getType() == Long.class || mField.getType() == long.class) {
+                    mField.setFloat(o, ((Double) value).longValue());
+                } else {
+                    mField.set(o, value);
+                }
+            } else {
+                mField.set(o, value);
+            }
         } catch (Exception e) {
             if (Orm.DEBUG) {
                 Log.w(Orm.TAG, "set " + mField.getName() + "=" + value);
